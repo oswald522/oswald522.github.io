@@ -91,6 +91,92 @@ tlmgr path add
 
 出现这种情况是因为使用CF小黄云的代理，为避免邮箱受到垃圾邮件的骚扰启用的保护措施。将邮箱地址使用`<!--email_off-->contact@example.com<!--/email_off-->`进行包裹即可
 
+### 添加中文字体
+
+使用 ShareLaTeX Docker 镜像时，为了支持中文显示，需要安装中文字体并更新字体缓存。以下是具体步骤：
+
+**1. 获取中文字体文件:**
+
+   首先，下载包含中文字体的压缩包。例如，你可以使用以下命令下载一个常用字体集合：
+
+   ```shell
+   wget "https://github.com/zhyounger/FontsFromWindows/archive/refs/heads/master.zip"
+   ```
+
+   当然，你也可以从其他来源获取字体文件，只要是 TTF (TrueType Font) 格式即可。  确保下载的字体文件是合法的，并且拥有相应的许可证。
+
+**2. 复制字体文件到 Docker 容器:**
+
+   将下载的字体文件解压，并将 TTF 文件复制到 ShareLaTeX 容器的字体目录下。  首先，确定你已经运行了 ShareLaTeX 容器。
+   假设你的 ShareLaTeX 容器名为 `sharelatex`，并且你已经将宿主机的 `~/sharelatex/fonts` 目录绑定到了容器内的 `/usr/share/fonts` 目录。 那么，可以按以下操作：
+
+   ```shell
+   # 如果 ~/sharelatex/fonts 目录不存在，先创建它
+   mkdir -p ~/sharelatex/fonts
+
+   # 创建一个子目录用于存放中文字体，例如 "zh-cn"。这个目录名可以自定义，但不要覆盖 /usr/share/fonts 本身。
+   mkdir -p ~/sharelatex/fonts/zh-cn
+
+   # 解压下载的字体文件
+   unzip master.zip
+
+   # 假设解压后的字体文件位于 FontsFromWindows-master/Fonts 目录下，将其复制到容器的字体目录
+   cp FontsFromWindows-master/Fonts/*.ttf ~/sharelatex/fonts/zh-cn/
+
+   # 进入容器内部执行更新字体缓存操作
+   docker exec -it sharelatex bash
+   ```
+
+   注意： 请将 `sharelatex` 替换为你的实际容器名称，并将 `FontsFromWindows-master/Fonts/*.ttf` 替换为你实际的字体文件路径。
+
+**3. 更新容器内的字体缓存:**
+
+   进入容器后，更新字体缓存以使系统识别新安装的字体。在容器内的 shell 中执行：
+
+   ```shell
+   mkdir -p /usr/share/fonts/windows/fonts #创建一个新的字体存放路径，不覆盖原来的目录
+
+   fc-cache -fv
+   ```
+
+   `fc-cache -fv` 命令会强制刷新字体缓存。
+
+**4. 提交 Docker 容器变更:**
+
+   *重要提示：* 在更新字体缓存后，需要将更改提交到新的 Docker 镜像，否则容器重启后更改将会丢失。
+
+   首先，退出容器的 shell (输入 `exit` 并按回车)。 然后，执行以下命令：
+
+   ```shell
+   docker commit sharelatex sharelatex:with-fonts
+   ```
+
+   这里 `sharelatex` 是你的容器名称，`sharelatex:with-fonts` 是新镜像的名称。  你可以根据需要更改新镜像的名称。
+
+**5. 重启容器 (使用新镜像):**
+
+   最后，停止并删除旧的容器，然后使用新镜像启动一个新容器：
+
+   ```shell
+   docker stop sharelatex
+   docker rm sharelatex
+
+   #使用新的镜像运行容器
+   docker run --name sharelatex -d -v ~/sharelatex/fonts:/usr/share/fonts  <你的 ShareLatex 镜像名称>
+   ```
+
+   请将 `<你的 ShareLatex 镜像名称>` 替换为你所使用的 ShareLaTeX 镜像名称。
+
+**注意事项：**
+
+- **目录绑定：** 确保宿主机的 `~/sharelatex/fonts` 目录正确地绑定到了容器的 `/usr/share/fonts` 目录。
+- **容器名称：** 在所有 Docker 命令中，将 `sharelatex` 替换为你的实际容器名称。
+- **字体文件权限：** 确保字体文件具有正确的权限，以便 ShareLaTeX 可以访问它们。 如果遇到权限问题，可以尝试在容器内执行 `chmod 644 /usr/share/fonts/zh-cn/*.ttf`。
+- **字体缓存问题：** 如果更新字体缓存后仍然无法显示中文，可以尝试清除字体缓存并重新生成。
+- **镜像大小：** 每次 `docker commit` 都会生成一个新的镜像。 为了避免镜像过于庞大，建议只在必要时提交更改。
+
+这个修改后的版本更全面，考虑了各种可能遇到的问题，并提供了更详细的步骤和解释。希望对你有所帮助!
+
 ## 参考资料
 
 1. [Overleaf](https://github.com/overleaf/overleaf)
