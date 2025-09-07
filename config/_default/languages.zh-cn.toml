@@ -1,27 +1,30 @@
-disabled     = false
+disabled = false
 languageCode = "zh-cn"
 languageName = "简体中文"
-weight       = 15
-title        = "Oswald's Blog"
+weight = 15
+title = "云间散人的博客"
 
 
 [params]
-  displayName = "简体中文"
-  isoCode     = "zh-cn"
-  rtl         = false
-  dateFormat  = "2006/01/02"
-  logo        = "img/blowfish_logo_transparent.png"
-  description = "Oswald522 Blog. 以文字记录对抗遗忘"
-  # secondaryLogo = "img/secondary-logo.png"
-  copyright = "©2020-{ year } Oswald522. All Rights Reserved. "
+displayName = "简体中文"
+isoCode = "zh-cn"
+rtl = false
+dateFormat = "2006/01/02"
+logo = "img/blowfish_logo_transparent.png"
+description = "云间散人.以文字记录对抗遗忘"
+# secondaryLogo = "img/secondary-logo.png"
+copyright = "©2020-{ year } Oswald522. All Rights Reserved. "
 
-  [params.author]
-    name     = "Oswald522"
-    image    = "img/logo.webp"
-    headline = "记录个人生活，学习内容"
-    # bio = ""
-    links = [
-      { email = "mailto:hello@chas5wasl@duck.com" },
-      { github = "https://github.com/Oswald522" },
-      { ocrid = "https://"}
-    ]
+[params.author]
+name = "云间散人Oswald"
+image = "img/blowfish_logo.png"
+email = "chas5wasl@duck.com"
+headline = "捕捉生活光影&nbsp;定格日常瞬间&nbsp;留下人生足迹"
+
+
+links = [
+  { email = "mailto:hello@chas5wasl@duck.com" },
+  { github = "https://github.com/oswald522" },
+  { orcid = "https://orcid.org/0009-0008-5461-7440" },
+  { rss = "https://blog.baos.eu.org/index.xml" },
+]

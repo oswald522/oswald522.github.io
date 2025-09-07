@@ -11,9 +11,9 @@
 # ordered by weight from lowest to highest.
 
 [[main]]
-name    = "文章列表"
+name = "文章列表"
 pageRef = "posts"
-weight  = 10
+weight = 10
 
 # [[main]]
 #   name    = "简码"
@@ -38,60 +38,51 @@ weight  = 10
 
 
 [[main]]
-name    = "标签系列"
+name = "标签系列"
 pageRef = "tags"
-weight  = 30
-
-[[main]]
-name   = "服务监控"
-url    = "https://status.baos.eu.org/status/service"
-weight = 40
-
-
-# [[main]]
-# name    = "关于"
-# pageRef = "about"
-# weight  = 35
+weight = 30
 
 
 [[main]]
-name    = "友情链接"
-pageRef = "links"
-weight  = 90
+name = "关于"
+pageRef = "about"
+weight = 35
 
-#[[main]]
-#  name = "Test"
-#  pageRef = "pagTest"
-#  weight = 1000
 
+[[main]]
 
 [[main]]
 identifier = "github"
-pre        = "github"
-url        = "https://github.com/Oswald522"
-weight     = 400
+pre = "github"
+url = "https://github.com/oswald522"
+weight = 400
 
 
 # -- Footer Menu --
 # The footer menu is displayed at the bottom of the page, just before
 # the copyright notice. Configure as per the main menu above.
 
-[[footer]]
-name    = "关于作者"
-pageRef = "about"
-weight  = 5
+# [[footer]]
+# name    = "关于作者"
+# pageRef = "about"
+# weight  = 5
 
 [[footer]]
-name    = "版权声明"
+name = "版权声明"
 pageRef = "copyright"
-weight  = 10
-
-[[footer]]
-name   = "站点地图"
-url    = "/sitemap.xml"
-weight = 30
+weight = 10
 
 # [[footer]]
-# name = "服务监控"
-# url = "https://status.baos.eu.org/status/service"
-# weight = 400
+# name = "站点地图"
+# url = "/sitemap.xml"
+# weight = 30
+
+[[footer]]
+name = "服务监控"
+url = "https://status.baos.eu.org/status/service"
+weight = 40
+
+[[footer]]
+name = "友情链接"
+pageRef = "links"
+weight = 90

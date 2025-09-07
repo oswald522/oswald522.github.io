@@ -69,7 +69,7 @@ forgejoDefaultServer = "https://v8.next.forgejo.org"
   showEdit                    = false
   # editURL = "https://github.com/username/repo/"
   editAppendPath      = true
-  seriesOpened        = true
+  seriesOpened        = false
   showHeadingAnchors  = true
   showPagination      = true
   invertPagination    = false
@@ -89,13 +89,13 @@ forgejoDefaultServer = "https://v8.next.forgejo.org"
   showHero                    = true
   heroStyle                   = "background" # valid options: basic, big, background, thumbAndBackground
   layoutBackgroundBlur        = true         # only used when heroStyle equals background or thumbAndBackground
-  layoutBackgroundHeaderSpace = false         # only used when heroStyle equals background
+  layoutBackgroundHeaderSpace = true         # only used when heroStyle equals background
   showBreadcrumbs             = true
-  showSummary                 = false
+  showSummary                 = true
   showViews                   = false
   showLikes                   = false
   showTableOfContents         = true
-  showCards                   = false
+  showCards                   = true
   orderByWeight               = false
   groupByYear                 = true
   cardView                    = true
@@ -158,15 +158,15 @@ forgejoDefaultServer = "https://v8.next.forgejo.org"
   # globalWidgetPosition = "Right"
 
 [verification]
-  # google = ""
-  # bing = ""
+  google = "7XLlGhX0PXzdCZLNhroFAbxyVJphFavcglFtCTfoCvQ"
+  bing = "F822AA861534F42525AB1D14E9E00BB2"
   # pinterest = ""
   # yandex = ""
   # fediverse = ""
 
 [rssnext]
-  # feedId = ""
-  # userId = ""
+  feedId = "187321030220335104"
+  userId = "187298906722317312"
 
 
 [params]
