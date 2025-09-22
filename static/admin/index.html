@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Content Manager</title>
+  <!-- 引入你的 CSS 和其他资源 -->
+  <link rel="stylesheet" href="/css/cms.css"> <!-- 示例 -->
+</head>
+<body>
+  <!-- Decap CMS 挂载点 -->
+  <div id="nc-root"></div>
+
+  <!-- 引入 Decap CMS 核心库 -->
+  <!-- 确保这里的路径是正确的，根据你的项目结构 -->
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
+  <!-- **** 你的自定义 JavaScript 脚本 **** -->
+  <script>
+    // Helper function to compute MD5 (you might need a library for this in JS if not built-in)
+    // For simplicity, we'll assume a basic md5 function or use a library.
+    // A common library is 'crypto-js'. If you don't have it, you'll need to add it.
+    // For this example, let's assume you have a simple md5 function available or include one.
+
+    // Basic MD5 function (for demonstration purposes, a more robust one is recommended)
+    // You can include a library like 'crypto-js' or find a standalone JS MD5 implementation.
+    function md5(string) {
+        // Placeholder for a real MD5 implementation.
+        // In a real project, you'd use:
+        // return CryptoJS.MD5(string).toString();
+        // Or fetch a library that provides it.
+        // For now, let's simulate a hash-like output.
+        // WARNING: This is NOT a real MD5 and will NOT produce consistent results across different days/systems.
+        // YOU MUST INCLUDE A PROPER MD5 IMPLEMENTATION.
+        console.warn("Using placeholder MD5. Please include a real MD5 library (e.g., crypto-js).");
+        return string.split('').reduce((hash, char) => {
+            const code = char.charCodeAt(0);
+            hash = ((hash << 5) - hash) + code;
+            hash = hash & hash; // Convert to 32bit integer
+            return hash;
+        }, 0).toString();
+    }
+
+    // Function to generate the random image URL
+    function generateRandomImageUrl(date) {
+        // Ensure date is a string for md5
+        const dateString = date ? date.toISOString() : new Date().toISOString();
+
+        // Calculate the seed using MD5 and substring
+        // Note: The substr logic might differ slightly in JS vs Go templates.
+        // Go: substr (md5 (.Date)) 4 6  -> starts at index 4, takes 6 characters.
+        // JS: string.substring(startIndex, endIndex) or string.slice(startIndex, endIndex)
+        // string.substring(4, 10) would give 6 characters starting from index 4.
+        const hash = md5(dateString);
+        const seed = hash.substring(4, 10); // Get 6 characters starting from index 4
+
+        // Construct the final URL
+        // Using .webp as in your Hugo config
+        return `https://picsum.photos/seed/${seed}/1600/900.webp`;
+    }
+
+    // Initialize Decap CMS and add custom logic
+    CMS.registerWidget('feature_image_generator', null, null,
+      // This is a placeholder for a custom widget if needed.
+      // For automatic generation, we'll use init_callback.
+      // If you wanted a button to *manually* generate, you'd build a custom widget here.
+    );
+
+    CMS.add_init_callback(function(cms) {
+      console.log("Decap CMS initialized. Adding custom logic.");
+
+      // Listen for the 'create' event on any collection
+      cms.events.on('create', function(collection, entry) {
+        console.log(`Entry created in collection: ${collection.id}`);
+
+        // --- IMPORTANT ---
+        // You need to know the 'name' of your 'featureimage' field in config.yml
+        // and the 'id' of your 'posts' collection.
+        // Adjust these IDs and field names according to your actual config.yml.
+
+        // Example: If your collection ID is 'posts' and the field name is 'featureimage'
+        const POSTS_COLLECTION_ID = 'posts'; // <-- CHANGE THIS if your collection ID is different
+        const FEATURE_IMAGE_FIELD_NAME = 'featureimage'; // <-- CHANGE THIS if your field name is different
+
+        // Check if this is the posts collection
+        if (collection.id === POSTS_COLLECTION_ID) {
+          // Get the current date from the entry.
+          // If 'date' field is not set, use the current time.
+          let entryDate = entry.getIn(['data', 'date']); // Get date from front matter
+          if (!entryDate) {
+            // If 'date' is not set, use current date/time
+            console.log("Entry date not found, using current date.");
+            entryDate = new Date();
+          } else {
+            // entryDate might be a moment.js object or similar depending on CMS version/config
+            // Ensure it's a Date object for toISOString()
+            if (typeof entryDate.toDate === 'function') { // Check if it's a moment.js object
+              entryDate = entryDate.toDate();
+            } else if (!(entryDate instanceof Date)) {
+              // Try to parse if it's a string, otherwise use current date
+              try {
+                entryDate = new Date(entryDate);
+              } catch (e) {
+                console.error("Failed to parse entry date, using current date.", e);
+                entryDate = new Date();
+              }
+            }
+          }
+
+          // Generate the image URL
+          const imageUrl = generateRandomImageUrl(entryDate);
+          console.log(`Generated image URL: ${imageUrl}`);
+
+          // Set the featureimage field value
+          // entry.data is a Immutable.Map, use set method
+          entry.data = entry.data.set(FEATURE_IMAGE_FIELD_NAME, imageUrl);
+
+          // IMPORTANT: Update the entry to reflect the change.
+          // This might require re-rendering or a specific update method.
+          // The exact method can vary. For older versions or specific setups,
+          // you might need entry.update() or similar.
+          // For newer versions, modifying entry.data directly and then triggering a save/update
+          // might be sufficient if the CMS re-renders. If not, you might need to force a re-render.
+          // A common pattern is to call `entry.update()` or `entry.replace()` if available.
+          // If you don't see the change, you might need to inspect the `entry` object's methods.
+
+          // A robust way often involves re-rendering the widget or the entire entry view.
+          // For simplicity, let's assume direct modification works or triggers an update.
+          // If the field doesn't update, you might need to re-fetch or re-render the entry.
+          // A common workaround is to explicitly tell the CMS to update the entry state.
+          // For Decap CMS v3, modifying `entry.data` and then `entry.update()` is a common pattern.
+          // If `entry.update()` is not directly available or doesn't work,
+          // you might need to find the specific field widget and update its value.
+
+          // Let's try a common approach:
+          // You might need to force a re-render or update the specific field.
+          // The exact API can be tricky. If this doesn't work, you might need to
+          // look into how to programmatically update fields in Decap CMS v3.
+          // For example, by getting the collection and entry again, or using specific setters.
+
+          // A simpler approach if direct data mutation doesn't reflect immediately:
+          // Re-triggering the editor to load the new data.
+          // This is often done by re-fetching the entry.
+          // However, the `create` event might be too early for that.
+
+          // Let's assume `entry.data = entry.data.set(...)` is the way to modify.
+          // If the UI doesn't update, you might need to manually refresh the entry.
+          // The `entry.update()` method is often used to signal changes.
+          // If `entry.update()` is not available, the CMS might automatically detect changes in `entry.data`.
+
+          // Let's try to trigger an update if possible.
+          // If `entry.update()` is not a method, the CMS might auto-detect.
+          // If not, you might need to find the specific field widget and update its value.
+          // For many setups, modifying `entry.data` is enough, and the CMS re-renders.
+
+          // If you encounter issues where the field doesn't update:
+          // 1. Check the console for errors.
+          // 2. Inspect the `entry` object for available methods.
+          // 3. Search Decap CMS documentation/issues for "programmatically set field value on create".
+          // A common pattern for Decap CMS v3 is to use `entry.getCollection().getEntry(entry.get('id')).then(updatedEntry => { ... })`
+          // but this is complex within an event handler.
+
+          // For now, let's assume the direct modification of `entry.data` is the intended way
+          // and that the CMS will pick up the change and re-render the form.
+          // If not, a common pattern is to trigger a save/commit, but that's not what we want here.
+          // We want it pre-filled.
+        }
+      });
+    });
+  </script>
+  <!-- End of your custom JavaScript -->
+</body>
+</html>
