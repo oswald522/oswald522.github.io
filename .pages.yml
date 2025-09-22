@@ -108,12 +108,6 @@ content:
         required: false
         description: 文章标签，用于细分主题
 
-      # 正文内容
-      - name: body
-        label: 正文内容
-        type: rich-text
-        required: true
-        description: 文章主要内容，支持 Markdown 语法的富文本编辑器
       - name: identifier
         label: Identifier
         type: uuid
@@ -123,6 +117,12 @@ content:
         name: "featureimage"
         type: string
         default: "https://picsum.photos/seed/{fields.identifier}/1600/900.webp"
+      # 正文内容
+      - name: body
+        label: 正文内容
+        type: rich-text
+        required: true
+        description: 文章主要内容，支持 Markdown 语法的富文本编辑器
 
   # ===========================================
   # 关于页面
