@@ -1,19 +1,26 @@
 ---
 title: Overleaf社区版搭建基础教程
-description: 具体描述Overleaf的搭建过程及教程
+description: 具体描述Overleaf的搭建过程及教程，从此实现latex编译自由。
 date: 2024-03-15T13:57:59+08:00
 Lastmod: 2025-04-20T08:06:45+08:00
 draft: false
 showComments: true
 featureimage: https://picsum.photos/seed/bb448b/1600/900.webp
-tags:
-  - Overleaf
-  - 常用软件
-  - 技术教程
-  - 教程配置
+tags: ["瞎折腾","服务器","Linux VPS"]
+series: ["服务器自建"]
+series_order: 3
 ---
 
 ## 概述
+
+## TL；DR
+
+如果仅仅想要体验社区服务，可以直接访问<https://latex.baos.eu.org>通过在当前页面评论区留下邮箱或者发送邮件至<chas5wasl@duck.com>，不保证即时反馈，接收到验证链接后自行设置密码进行体验。
+> 验证链接可能以 `http://localhost` 开头，请将链接修改为 `https://latex.baos.eu.org`
+
+---
+
+## 前言
 
 Overleaf是一个在线的LaTeX编辑器，支持多人协作编辑，提供了丰富的模板和宏包，可以在线编译LaTeX文档。Overleaf有免费版和付费版，免费版有一些限制，如编译时间限制、项目数限制等。Overleaf的付费版提供了更多的功能，如无限编译时间、无限项目数、Git同步等。
 
