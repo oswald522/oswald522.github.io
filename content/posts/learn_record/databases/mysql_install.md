@@ -6,7 +6,6 @@ Lastmod: 2025-06-13T20:32:19+08:00
 draft: false
 showComments: true
 featureimage: "https://picsum.photos/seed/3be906/1600/900.webp"
-tags: ["数据库软件"]
 tags: ["数据库软件", "MySQL", "SQL练习"]
 series: ["数据库教程"]
 series_order: 1

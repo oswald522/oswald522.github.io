@@ -184,18 +184,18 @@ hostnamectl set-hostname {new name}
 ssh-keygen -t ed25519 -C "{密钥注释}"
 ```
 
-![图片|690x94](upload://sHkBdYxVVygh0MroELjkCoA3ea5.png)
+<!-- ![图片|690x94](upload://sHkBdYxVVygh0MroELjkCoA3ea5.png) -->
 
 提示密钥保存位置 (Enter file in which to save the key), 回车默认存在用户根目录下的 `.ssh` 文件夹下. 我以当前目录下为例, 注意不要忘了文件名.
 
-![图片|690x84](upload://erixgAIGlcm9PU2iLPYjvodb2CL.png)
+<!-- ![图片|690x84](upload://erixgAIGlcm9PU2iLPYjvodb2CL.png) -->
 提示输入密码, 建议设置密码, 防止密钥被盗用. 输入密码时不会显示. 回车确认.
 
-![图片|690x106](upload://rPcN8dcjqOCaYkA76HqC6mbImnE.png)
+<!-- ![图片|690x106](upload://rPcN8dcjqOCaYkA76HqC6mbImnE.png) -->
 再输一次密码, 回车确认, 完成密钥生成.
 
-![图片|690x421](upload://bo5BdHfQBDYymLzF9SSupe03awS.png)
-![图片|690x52](upload://9YODGGm6cme4w89mt2XnaX8VQoq.png)
+<!-- ![图片|690x421](upload://bo5BdHfQBDYymLzF9SSupe03awS.png)
+![图片|690x52](upload://9YODGGm6cme4w89mt2XnaX8VQoq.png) -->
 
 `id_ed25519_test` 就是私钥文件, `id_ed25519_test.pub` 就是公钥文件, 纯文本格式打开公钥文件 (电脑装了微软的 Publisher 会误识别文件后缀哦), 实例内容长这样 (下文也拿这个当例子):
 
@@ -484,7 +484,7 @@ TEXT
 
 此处使用了 Powerlevel10k 主题, 提供我的主题配置, 直接 `nano ~/.p10k.terminal.zsh`, 把下面文件的内容粘贴进去即可, 或者你自己配置.
 
-[.p10k.terminal.zip|attachment](upload://4VyC70MhdPX5XpbFA5ITsZyX1NE.zip) (19.1 KB)
+<!-- [.p10k.terminal.zip|attachment](upload://4VyC70MhdPX5XpbFA5ITsZyX1NE.zip) (19.1 KB) -->
 
 ### 0.5. 防火墙配置 (如果不是阿里云等大厂的机器, 没安全组的情况下必须配置)
 
@@ -755,7 +755,7 @@ Xanmod 内核做了蛮多优化, 而且比那些脚本装的奇奇怪怪的第�
 wget -O check_x86-64_psabi.sh https://dl.xanmod.org/check_x86-64_psabi.sh && chmod +x check_x86-64_psabi.sh && ./check_x86-64_psabi.sh
 ```
 
-![图片|690x188](upload://1PyQp1qytxKIAXEe82K9MhQq4FZ.png)
+<!-- ![图片|690x188](upload://1PyQp1qytxKIAXEe82K9MhQq4FZ.png) -->
 
 如示例, 支持 v2 版本.
 
@@ -768,7 +768,7 @@ wget -qO - https://gitlab.com/afrd.gpg | sudo gpg --dearmor -vo /etc/apt/keyring
 
 为什么不用官方说明里面的 GPG key 地址?</summary>
 
-![图片|690x295](upload://oiCI5zAumJXl0O1jgnM2pnbQIyu.jpeg)
+<!-- ![图片|690x295](upload://oiCI5zAumJXl0O1jgnM2pnbQIyu.jpeg) -->
 
 #### 1.1.3. 配置源
 

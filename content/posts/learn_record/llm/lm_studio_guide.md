@@ -4,7 +4,6 @@ description: "LM Studio 是一款强大的客户端应用，支持本地离线�
 date: 2024-03-15T14:42:22+08:00
 Lastmod: 2025-03-28
 draft: false
-description: ""
 showComments: true
 featureimage: "https://picsum.photos/seed/2128c8f0/1600/900.webp"
 tags: ["技术教程","经验转载","大模型部署"]
