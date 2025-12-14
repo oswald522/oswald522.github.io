@@ -11,8 +11,13 @@
 # ordered by weight from lowest to highest.
 
 [[main]]
-name = "文章列表"
+name = "博客"
 pageRef = "posts"
+weight = 10
+
+[[main]]
+name = "归档"
+pageRef = "archives"
 weight = 10
 
 # [[main]]

@@ -7,6 +7,45 @@
 
 /* Increase the default font size */
 html {
-    font-size: 13pt;
-    transform: scale(1.05);
+    font-size: 10pt;
+    transform: scale(1.02);
+}
+
+/* 给目录的链接加荧光笔效果 */
+#TableOfContents a {
+    text-decoration: none;
+    color: inherit;
+    background-image: linear-gradient(to top, rgba(249, 155, 1, 0.3) 30%, transparent 30%);
+    transition: background-size 0.3s ease;
+    background-size: 100% 0.4em;
+    background-repeat: no-repeat;
+    background-position: 0 88%;
+}
+
+#TableOfContents a:hover {
+    background-size: 100% 70%;
+    background-image: linear-gradient(to top, rgba(249, 155, 1, 0.3) 88%, transparent 88%);
+}
+
+/* 给正文的链接加荧光笔效果 */
+.article-content a {
+    text-decoration: none;
+    color: inherit;
+    background-image: linear-gradient(to top, rgba(249, 155, 1, 0.3) 30%, transparent 30%);
+    transition: background-size 0.3s ease;
+    background-size: 100% 0.4em;
+    background-repeat: no-repeat;
+    background-position: 0 88%;
+}
+
+.article-content a:hover {
+    background-size: 100% 70%;
+    background-image: linear-gradient(to top, rgba(249, 155, 1, 0.3) 88%, transparent 88%);
+}
+/* # 淡色格子纹 */
+body {  
+  background-image:  
+    linear-gradient(0deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px),  
+    linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);  
+  background-size: 8px 8px;  
 }

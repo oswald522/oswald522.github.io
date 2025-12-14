@@ -11,6 +11,7 @@ autoSwitchAppearance = true
 
 enableSearch   = true
 enableCodeCopy = true
+enableStructuredBreadcrumbs = false
 
 replyByEmail = false
 
@@ -18,15 +19,19 @@ replyByEmail = false
 # robots = ""
 
 disableImageOptimization = false
+disableImageOptimizationMD = false
 disableTextInHeader      = false
 # backgroundImageWidth = 1200
 
 defaultBackgroundImage = "/img/background.svg"
 defaultFeaturedImage   = "/img/featured.svg"
+# defaultSocialImage = "/android-chrome-512x512.png" # used as default for social media sharing (Open Graph and Twitter)
+hotlinkFeatureImage = false
+# imagePosition = "50% 50%"
 
 highlightCurrentMenuArea      = true
 smartTOC                      = true
-smartTOCHideUnfocusedChildren = true
+smartTOCHideUnfocusedChildren = false
 
 giteaDefaultServer   = "https://git.fsfe.org"
 forgejoDefaultServer = "https://v8.next.forgejo.org"
@@ -51,6 +56,7 @@ forgejoDefaultServer = "https://v8.next.forgejo.org"
   cardView             = true
   cardViewScreenWidth  = false
   layoutBackgroundBlur = true      # only used when layout equals background
+  disableHeroImageFilter = false # only used when layout equals hero
 
 [article]
   showDate                    = true
@@ -78,6 +84,7 @@ forgejoDefaultServer = "https://v8.next.forgejo.org"
   showRelatedContent = true
   relatedContentLimit = 3
   showTaxonomies    = true
+  showCategoryOnly = false # use showTaxonomies OR showCategoryOnly, not both
   showAuthorsBadges = true
   showWordCount     = true
   # sharingLinks = [ "linkedin", "twitter", "bluesky", "mastodon", "reddit", "pinterest", "facebook", "email", "whatsapp", "telegram"]

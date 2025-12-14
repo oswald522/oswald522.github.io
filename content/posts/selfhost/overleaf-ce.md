@@ -78,6 +78,7 @@ Overleaf的docker镜像中自带了一个基础版本的TeX Live，但是这个�
 ```shell
 docker exec -it overleaf bash #进入Overleaf容器
 tlmgr --version #查看当前TeX Live版本
+tlmgr install scheme-medium  # 更新Tex Live,两者选择一个即可
 tlmgr install scheme-full  #更新TeX Live
 tlmgr path add
 ```
@@ -183,6 +184,8 @@ tlmgr path add
 - **镜像大小：** 每次 `docker commit` 都会生成一个新的镜像。 为了避免镜像过于庞大，建议只在必要时提交更改。
 
 这个修改后的版本更全面，考虑了各种可能遇到的问题，并提供了更详细的步骤和解释。希望对你有所帮助!
+
+## 更新内容版本
 
 ## 参考资料
 
