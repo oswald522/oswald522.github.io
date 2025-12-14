@@ -1,5 +1,5 @@
 ---
-title: 归档
+title: 博客归档
 layout: archives
 showDate: false
 showLikes: false

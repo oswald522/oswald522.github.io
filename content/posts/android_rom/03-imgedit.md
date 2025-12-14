@@ -1,15 +1,18 @@
 ---
-title: "安卓系统刷机教程系列-03镜像修改篇"
+title: "安卓刷机教程-03镜像修改篇"
 description: ""
 date: 2025-12-14T11:10:16+08:00
 Lastmod: 2025-12-14T11:10:16+08:00
-draft: false
+draft: true
 showComments: true
 featureimage: "https://picsum.photos/seed/ca32ab/1600/900.webp"
 tags: ["安卓刷机","系统修改","基础教程"]
 series: ["安卓ROM系列"]
 series_order: 3
 ---
+
+正文内容123123123
+123123132
 
 ## 镜像类型及主要作用
 

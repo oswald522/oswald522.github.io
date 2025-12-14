@@ -11,14 +11,14 @@
 # ordered by weight from lowest to highest.
 
 [[main]]
-name = "博客"
+name = "文章"
 pageRef = "posts"
 weight = 10
 
 [[main]]
 name = "归档"
 pageRef = "archives"
-weight = 10
+weight = 20
 
 # [[main]]
 #   name    = "简码"
@@ -47,14 +47,10 @@ name = "标签系列"
 pageRef = "tags"
 weight = 30
 
-
 [[main]]
 name = "关于"
 pageRef = "about"
 weight = 35
-
-
-[[main]]
 
 [[main]]
 identifier = "github"

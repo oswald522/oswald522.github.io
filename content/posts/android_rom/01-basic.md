@@ -1,15 +1,17 @@
 ---
 title: "安卓刷机教程-01基础篇"
 description: ""
-date: 2025-12-14T10:52:17+08:00
+date: 2025-12-08T10:52:17+08:00
 Lastmod: 2025-12-14T10:52:17+08:00
 draft: true
 showComments: true
 featureimage: "https://picsum.photos/seed/2d8df5/1600/900.webp"
 tags: ["安卓刷机","系统修改","基础教程"]
-series: ["ROM系列"]
+series: ["安卓ROM系列"]
 series_order: 1
 ---
+
+介绍安卓系统刷机的基础知识和一些常用的工具
 
 ## 安卓系统刷机教程01-基础篇
 

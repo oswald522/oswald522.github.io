@@ -3,7 +3,7 @@ title: "安卓刷机教程-02完整流程篇"
 description: ""
 date: 2025-12-14T10:52:17+08:00
 Lastmod: 2025-12-14T10:52:17+08:00
-draft: false
+draft: true
 showComments: true
 featureimage: "https://picsum.photos/seed/2d8df5/1600/900.webp"
 tags: ["安卓刷机","系统修改","基础教程"]
@@ -11,6 +11,7 @@ series: ["安卓ROM系列"]
 series_order: 2
 ---
 
+详细描述安卓系统ROM的完整过程。
 
 ## 全流程概述
 

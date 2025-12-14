@@ -10,6 +10,8 @@ series: ["自建服务"]
 series_order: 2
 ---
 
+文章详细描述Poste.io邮局服务器的搭建过程及常见的问题解决处理方法。
+
 ## 📜 **一、引言：什么是 Poste.io？**
 
 Poste.io 是一款设计精巧、功能强大的开源邮件服务器解决方案。它致力于简化邮件系统的部署与日常管理，将复杂的配置流程整合为一体化的简易操作。官方网站的口号sologon为`SMTP + IMAP + POP3 + Antispam + Antivirus

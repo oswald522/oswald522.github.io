@@ -11,7 +11,7 @@ series: ["安卓ROM系列"]
 series_order: 5
 ---
 
-
+以下内容为转载。
 
 在我的上一篇帖子中，我写了精简固件并刷机之后的流畅手感，发现有值友和我境况相同，因为电视广告太多都想怒砸一波电视了。所以这一期，我也不想藏着掖着了，不如把我折腾的全过程写出来让值友们少走弯路。
 
@@ -60,7 +60,11 @@ HEX编辑器打开BIN固件HEX编辑器打开BIN固件
 
 删除system.img中的
 
-    AdPlayer.apk、AdPlayer.odex、TVLauncher.apk、TVLauncher.odex、TVUpgrade.apk、TVUpgrade.odex、funtvRCOTA.apk
+```
+AdPlayer.apk、AdPlayer.odex、TVLauncher.apk、
+TVLauncher.odex、TVUpgrade.apk、TVUpgrade.odex、
+funtvRCOTA.apk
+```
 
 其他组件看个人需求增删，这时候也可以加入supersu权限管理了，做好后对img重新打包
 
