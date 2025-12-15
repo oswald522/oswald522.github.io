@@ -2,7 +2,7 @@
 title: "安卓刷机教程-05海信安卓4.4实战"
 description: ""
 date: 2025-12-14T12:51:56+08:00
-Lastmod: 2025-12-14T12:51:56+08:00
+lastmod: 2025-12-14T12:51:56+08:00
 draft: true
 showComments: true
 featureimage: "https://picsum.photos/seed/bc701f/1600/900.webp"

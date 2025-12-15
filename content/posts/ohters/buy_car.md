@@ -1,6 +1,6 @@
 ---
 date: '2025-03-09T12:19:00+08:00'
-Lastmod: '2024-03-09T12:19:00+08:00'
+lastmod: '2024-03-09T12:19:00+08:00'
 draft: false
 title: '[转载]购车踩坑之旅'
 description: 'Test Post Content'

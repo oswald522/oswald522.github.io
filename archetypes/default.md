@@ -2,7 +2,7 @@
 title: "{{ replace .Name "-" " " | title }}"
 description: ""
 date: {{ .Date }}
-Lastmod: {{ .Date }}
+lastmod: {{ .Date }}
 summary: "示例摘要"
 draft: false
 showComments: true

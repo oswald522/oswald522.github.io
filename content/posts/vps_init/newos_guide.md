@@ -2,7 +2,7 @@
 title: "[转载]Linux 部署及安全实践指南"
 description: Linux常见部署命令记录
 date: 2024-03-30T08:16:25+08:00
-Lastmod: 2025-03-30T08:16:25+08:00
+lastmod: 2025-03-30T08:16:25+08:00
 draft: false
 showComments: true
 featureimage: https://picsum.photos/seed/629600/1600/900.webp

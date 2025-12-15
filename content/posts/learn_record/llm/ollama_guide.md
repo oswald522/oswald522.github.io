@@ -2,7 +2,7 @@
 title: "Ollama本地部署大模型完全指南"
 description: "本地部署ollama大模型，包含模型下载、程序安装及常见问题解答"
 date: 2024-04-20T10:21:19+08:00
-Lastmod: 2024-04-20T10:21:19+08:00
+lastmod: 2024-04-20T10:21:19+08:00
 draft: false
 showComments: true
 featureimage: "https://picsum.photos/seed/82eb89/1600/900.webp"

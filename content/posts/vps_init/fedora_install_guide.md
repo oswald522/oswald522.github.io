@@ -2,7 +2,7 @@
 title: "Fedora41桌面系统安装及常用配置教程 (btrfs + timeshift + gnome)"
 description: "记录一次Fedora系统安装的完全教程，基于Gnome桌面环境，包含基础设置方法，可以实现timeshhift秒级备份。"
 date: 2024-03-26T21:05:09+08:00
-# Lastmod: 2025-03-15
+lastmod: 2025-03-15
 draft: false
 showComments: true
 featureimage: "https://picsum.photos/seed/6ae241/1600/900.webp"

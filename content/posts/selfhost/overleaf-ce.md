@@ -2,7 +2,7 @@
 title: Overleaf社区版搭建基础教程
 description: 具体描述Overleaf的搭建过程及教程，从此实现latex编译自由。
 date: 2024-03-15T13:57:59+08:00
-Lastmod: 2025-04-20T08:06:45+08:00
+lastmod: 2025-04-20T08:06:45+08:00
 draft: false
 showComments: true
 featureimage: https://picsum.photos/seed/bb448b/1600/900.webp

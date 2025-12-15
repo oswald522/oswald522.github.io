@@ -2,7 +2,7 @@
 title: "K8S&Docker 100问题"
 description: ""
 date: 2025-07-02T08:51:41+08:00
-Lastmod: 2025-07-02T08:51:41+08:00
+lastmod: 2025-07-02T08:51:41+08:00
 draft: false
 showComments: true
 featureimage: "https://picsum.photos/seed/8b3cf9/1600/900.webp"

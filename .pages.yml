@@ -4,8 +4,8 @@
 
 # 媒体文件配置
 media:
-  input: static/img/  # 上传文件存储路径（相对于项目根目录）
-  output: /img      # 网站发布后的公共访问路径
+  input: static/img # 上传文件存储路径（相对于项目根目录）
+  output: /img # 网站发布后的公共访问路径
   #extensions: [jpg, jpeg, png, gif, svg, webp]     # 可显示的文件扩展名的文件
   #categories: [jpg, jpeg, png, gif, svg, webp]     # 允许特定类型的文件
 
@@ -23,14 +23,14 @@ content:
     #exclude: [ _index.md ]     # 忽略文件
     format: yaml-frontmatter
     view:
-      fields: [ title, date, categories, tags ]
+      fields: [title, date, categories, tags]
       primary: title
-      sort: [ date, title ]
+      sort: [date, title]
       default:
         #search: ''
         sort: date
         order: desc
-      layout: tree      # `list`平铺或`tree`树状列表
+      layout: tree # `list`平铺或`tree`树状列表
       node:
         filename: _index.md
         hideDirs: nodes
@@ -49,7 +49,11 @@ content:
         label: URL 别名
         type: string
         required: false
-        pattern: { message: '只能包含小写字母、数字和连字符', regex: '^[a-z0-9]+(?:-[a-z0-9]+)*$' }
+        pattern:
+          {
+            message: "只能包含小写字母、数字和连字符",
+            regex: "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+          }
         description: 用于生成 URL 的别名，留空则自动生成
 
       # 描述和摘要
@@ -113,6 +117,7 @@ content:
         type: uuid
         options:
           editable: false
+
       - label: "Feature Image"
         name: "featureimage"
         type: string

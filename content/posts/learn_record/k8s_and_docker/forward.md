@@ -2,7 +2,7 @@
 title: 云计算OpenStack+K8S基础教程(第一节)
 description: ""
 date: 2025-04-20T07:55:23+08:00
-Lastmod: 2025-04-20T07:55:23+08:00
+lastmod: 2025-04-20T07:55:23+08:00
 draft: false
 showComments: true
 featureimage: https://picsum.photos/seed/503130/1600/900.webp

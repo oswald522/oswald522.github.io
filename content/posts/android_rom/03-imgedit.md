@@ -2,7 +2,7 @@
 title: "安卓刷机教程-03镜像修改篇"
 description: ""
 date: 2025-12-14T11:10:16+08:00
-Lastmod: 2025-12-14T11:10:16+08:00
+lastmod: 2025-12-14T11:10:16+08:00
 draft: true
 showComments: true
 featureimage: "https://picsum.photos/seed/ca32ab/1600/900.webp"

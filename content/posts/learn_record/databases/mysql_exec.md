@@ -2,7 +2,7 @@
 title: "MySQL经典50道基础练习题（附加答案）"
 description: "精选50道MySQL基础练习题，涵盖了数据查询、多表联结、聚合函数、子查询、窗口函数和日期函数等多个核心概念，助您快速掌握MySQL查询技巧。"
 date: 2025-06-16T09:19:32+08:00
-# Lastmod: 2025-09-06T09:19:32+08:00
+# lastmod: 2025-09-06T09:19:32+08:00
 draft: false
 showComments: true
 featureimage: "https://picsum.photos/seed/8955dfgf/1600/900.webp"

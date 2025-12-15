@@ -2,7 +2,7 @@
 title: "LM Studio 本地部署大模型的详细操作教程及硬件要求"
 description: "LM Studio 是一款强大的客户端应用，支持本地离线运行各类开源大语言模型（LLMs）。通过LM Studio工具实现各类型AI模型本地部署的操作方法方式。"
 date: 2024-03-15T14:42:22+08:00
-Lastmod: 2025-03-28
+lastmod: 2025-03-28
 draft: false
 showComments: true
 featureimage: "https://picsum.photos/seed/2128c8f0/1600/900.webp"

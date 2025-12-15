@@ -2,7 +2,7 @@
 title: "Alpine搭建K8s教程"
 description: "基于 Alpine 使用 kubeadm 搭建 k8s"
 date: 2025-04-22T15:13:34+08:00
-Lastmod: 2025-04-22T15:13:34+08:00
+lastmod: 2025-04-22T15:13:34+08:00
 draft: false
 showComments: true
 featureimage: "https://picsum.photos/seed/fccce8/1600/900.webp"

@@ -2,7 +2,7 @@
 title: "信创电脑修改Root密码教程"
 description: ""
 date: 2025-07-30T10:53:37+08:00
-Lastmod: 2025-07-30T10:53:37+08:00
+lastmod: 2025-07-30T10:53:37+08:00
 draft: false
 showComments: true
 featureimage: "https://picsum.photos/seed/b33554/1600/900.webp"

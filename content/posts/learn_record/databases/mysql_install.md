@@ -2,7 +2,7 @@
 title: "MySQL\\MariaDB数据库安装教程"
 description: "记录MySQL和MariaDB的安装过程"
 date: 2025-06-13T20:32:19+08:00
-Lastmod: 2025-06-13T20:32:19+08:00
+lastmod: 2025-06-13T20:32:19+08:00
 draft: false
 showComments: true
 featureimage: "https://picsum.photos/seed/3be906/1600/900.webp"

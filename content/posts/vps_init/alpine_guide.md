@@ -2,7 +2,7 @@
 title: Alpine基础安装教程
 description: "Alpine的基础安装配置教程，包含各部分的操作和存储持久化。"
 date: 2025-04-22T15:05:13+08:00
-Lastmod: 2025-04-22T15:05:13+08:00
+lastmod: 2025-04-22T15:05:13+08:00
 draft: false
 showComments: true
 featureimage: https://picsum.photos/seed/7a639a/1600/900.webp
