@@ -1,12 +1,14 @@
 ---
 title: "简码"
 weight: 6
+date: '2025-03-09T12:19:00+08:00'
 draft: false
 description: "所有 Blowfish 中可用的简码"
 slug: "shortcodes"
-tags: ["简码", "mermaid", "图标", "lead", "docs"]
+tags: ["简码", "图标"]
+featureimage: "https://picsum.photos/seed/70526cd/1600/900.webp"
 series: ["部署教程"]
-series_order: 8
+series_order: 1
 ---
 
 除了所有[默认 Hugo 简码](https://gohugo.io/content-management/shortcodes/) 之外，Blowfish 还添加了一些额外的功能。

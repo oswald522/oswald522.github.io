@@ -8,6 +8,8 @@ on:
     - cron: "0 17 * * *" # 每天 UTC+0 17点运行
   workflow_dispatch:
   push:
+    branches:
+      - main # Set a branch to deploy
 
 jobs:
   neodb_sync:
@@ -88,7 +90,7 @@ jobs:
               }' tmp/neodb/${category}_${type}/*.json > "${category}_${type}.json"
 
               # 保存到 neodb 目录
-              cp -f "${category}_${type}.json" "content/neodb/${category}_${type}.json"
+              cp -f "${category}_${type}.json" "static/neodb/${category}_${type}.json"
             done
           done
 
@@ -102,4 +104,4 @@ jobs:
         uses: EndBug/add-and-commit@v9
         with:
           message: "chore: update NeoDB shelf data (all types)"
-          add: "./content/neodb"
+          add: "./static/neodb"

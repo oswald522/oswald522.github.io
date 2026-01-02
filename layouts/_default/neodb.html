@@ -173,7 +173,7 @@
     // 获取 NeoDB 数据
     async function fetchNeoDBData(category, type) {
         // 使用 raw.githubusercontent.com 获取原始 JSON 文件，解决 CORS 问题
-        const jsonUrl = `https://raw.githubusercontent.com/oswald522/oswald522.github.io/main/content/neodb/${category}_${type}.json`;
+        const jsonUrl = `https://blog.baos.eu.org/neodb/${category}_${type}.json`;
 
         try {
             const response = await fetch(jsonUrl);
