@@ -1,0 +1,416 @@
+{{ define "main" }}
+{{ .Scratch.Set "scope" "single" }}
+
+{{ $movieCss := resources.Get "css/neodb.css" | minify | fingerprint "sha256" }}
+<link rel="stylesheet" href="{{ $movieCss.RelPermalink }}" integrity="{{ $movieCss.Data.Integrity }}"
+    crossorigin="anonymous">
+
+<article>
+    <section class="flex flex-col max-w-full mt-0 prose dark:prose-invert lg:flex-row">
+        <div class="min-w-0 min-h-0 max-w-fit">
+            <div class="article-content max-w-full mb-20">
+                {{ .Content }}
+                <!-- NeoDB 书影音展示区域 -->
+                <div id="neodb-container" class="mt-8">
+
+                    <!-- 分类导航 -->
+                    <div id="neodb-nav"
+                        class="flex flex-wrap gap-4 mb-6 border-b border-neutral-200 dark:border-neutral-700">
+                        <!-- 导航按钮将通过 JavaScript 动态生成 -->
+                    </div>
+
+                    <!-- 类型切换 -->
+                    <div id="neodb-type-nav" class="flex gap-4 mb-6">
+                        <button
+                            class="neodb-type-item active px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 bg-primary-500 text-white border border-primary-500 transition-colors"
+                            data-type="complete">玩过</button>
+                        <button
+                            class="neodb-type-item px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 bg-transparent border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                            data-type="progress">在玩</button>
+                        <button
+                            class="neodb-type-item px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 bg-transparent border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                            data-type="wishlist">想玩</button>
+                    </div>
+
+                    <!-- 内容网格 -->
+                    <div id="neodb-grid"
+                        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
+                        data-page="1" data-type="complete">
+                        <!-- 内容将通过 JavaScript 动态加载 -->
+                    </div>
+
+                    <!-- 加载更多 -->
+                    <div id="neodb-load-more" class="text-center mt-8">
+                        <button id="load-more-btn"
+                            class="px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 bg-transparent border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors rounded"
+                            style="display: none;">加载更多</button>
+                        <p id="no-more-items" class="text-neutral-500 dark:text-neutral-400 text-sm mt-2"
+                            style="display: none;">没有更多内容了</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+</article>
+
+<!-- NeoDB JavaScript -->
+<style>
+    /* NeoDB 样式补充 */
+    /* 添加一些基本的 NeoDB 项目卡片样式 */
+    .neodb-item {
+        background-color: var(--neutral-100);
+        /* light background */
+        border: 1px solid var(--neutral-200);
+        border-radius: 0.25rem;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        color: var(--neutral-900);
+    }
+
+    .dark .neodb-item {
+        background-color: var(--neutral-800);
+        /* dark background */
+        border-color: var(--neutral-700);
+        color: var(--neutral-100);
+    }
+
+    .neodb-item img {
+        width: 100%;
+        height: auto;
+        display: block;
+        object-fit: cover;
+        /* 确保图片覆盖区域 */
+        aspect-ratio: 2/3;
+        /* 海报常见比例 */
+    }
+
+    .neodb-item .absolute {
+        top: 0.5rem;
+        left: 0.5rem;
+        background-color: var(--primary-500);
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-size: 0.75rem;
+        font-weight: bold;
+        z-index: 10;
+    }
+
+    .neodb-item h3 a:hover {
+        color: var(--primary-500);
+        /* Adjust hover color based on your theme */
+    }
+
+    .neodb-nav-item.active {
+        border-color: var(--primary-500);
+        color: var(--primary-500);
+    }
+
+    /* 旋转加载动画的颜色 */
+    .animate-spin {
+        border-color: var(--primary-500);
+    }
+</style>
+
+<script>
+    // NeoDB 配置
+    const NEODB_CONFIG = {
+        // 自定义显示的类目配置 - 按照这个顺序显示，不在列表中的不显示
+        categories: [
+            // 可以调整顺序，添加或删除类目
+            { key: 'book', name: '书籍' },
+            { key: 'movie', name: '电影' },
+            { key: 'game', name: '游戏' },
+            { key: 'tv', name: '番剧' },
+            { key: 'music', name: '音乐' },
+            { key: 'podcast', name: '播客' },
+            { key: 'performance', name: '表演' }
+        ],
+
+        // 所有类目的类型文本配置
+        typeTexts: {
+            book: { complete: "读过", progress: "在读", wishlist: "想读" },
+            movie: { complete: "看过", progress: "在看", wishlist: "想看" },
+            tv: { complete: "看过", progress: "在看", wishlist: "想看" },
+            music: { complete: "听过", progress: "在听", wishlist: "想听" },
+            game: { complete: "玩过", progress: "在玩", wishlist: "想玩" },
+            podcast: { complete: "听过", progress: "在听", wishlist: "想听" },
+            performance: { complete: "看过", progress: "在看", wishlist: "想看" }
+        }
+    };
+
+    // 全局状态
+    let currentCategory = NEODB_CONFIG.categories[0]?.key || 'book'; // 默认第一个分类
+    let currentType = 'complete'; // 默认显示“玩过/看过/读过”
+    let currentPage = 1;
+    let isLoading = false;
+    let allData = {}; // 缓存所有数据，key 为 "category_type"
+
+    // 动态生成导航按钮
+    function generateNavButtons() {
+        const navContainer = document.getElementById('neodb-nav');
+        if (!navContainer) return;
+
+        navContainer.innerHTML = ''; // 清空现有按钮
+
+        NEODB_CONFIG.categories.forEach((category, index) => {
+            const isActive = category.key === currentCategory; // 根据 currentCategory 判断激活状态
+            const activeClass = isActive ? ' active text-primary-500 border-primary-500' : '';
+
+            const button = document.createElement('button');
+            button.className = `neodb-nav-item px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:text-primary-500 dark:hover:text-primary-400 border-b-2 border-transparent hover:border-primary-500 transition-colors${activeClass}`;
+            button.setAttribute('data-category', category.key);
+            button.textContent = category.name;
+
+            navContainer.appendChild(button);
+        });
+    }
+
+    // 获取 NeoDB 数据
+    async function fetchNeoDBData(category, type) {
+        // 使用 raw.githubusercontent.com 获取原始 JSON 文件，解决 CORS 问题
+        const jsonUrl = `https://raw.githubusercontent.com/oswald522/oswald522.github.io/main/content/neodb/${category}_${type}.json`;
+
+        try {
+            const response = await fetch(jsonUrl);
+            if (!response.ok) {
+                // 如果是 404 错误（文件不存在），则输出警告并返回空数组
+                if (response.status === 404) {
+                    console.warn(`NeoDB数据文件未找到: ${jsonUrl}. 请确保文件存在且路径正确。`);
+                    return { data: [] };
+                }
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const fullData = await response.json();
+
+            // 假设每个 JSON 文件 (例如 game_complete.json) 已经只包含特定 shelf_type 的数据
+            // 所以这里直接返回 fullData.data，不再需要额外的 filter
+            return { data: fullData.data || [] }; // 确保返回的是数组
+        } catch (error) {
+            console.error(`加载 ${jsonUrl} 失败:`, error);
+            return { data: [] };
+        }
+    }
+
+    // 渲染评分星星
+    function renderStars(rating) {
+        if (!rating || rating === 0) return '未评分';
+        const stars = Math.min(5, Math.round(rating / 2));
+        return '⭐'.repeat(Math.max(1, stars)); // 最少显示1个星星，避免0个星星
+    }
+
+    // 渲染评分文本
+    function renderRatingText(rating) {
+        if (!rating || rating === 0) return '暂无评分';
+        return rating.toFixed(1);
+    }
+
+    // 检查是否是最近添加的内容
+    function isRecent(createdTime, days = 15) {
+        if (!createdTime) return false;
+        const created = new Date(createdTime);
+        const now = new Date();
+        const diffTime = Math.abs(now - created);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays <= days;
+    }
+
+    // 渲染单个项目卡片
+    function renderItem(shelfItem) {
+        const item = shelfItem.item;
+        const rating = item.rating || 0;
+        const stars = renderStars(rating);
+        const isRecentItem = isRecent(shelfItem.created_time);
+        // const commentText = shelfItem.comment_text || ''; // 如果需要展示评论，可以在这里使用
+
+        return `
+    <div class="neodb-item">
+      <div class="relative">
+        ${isRecentItem ? '<div class="absolute">新</div>' : ''}
+        <a href="${item.url || '#'}" target="_blank" rel="noreferrer noopener" class="block">
+          <img src="${item.cover_image_url || '/img/404.png'}"
+             alt="${item.display_title || '未知标题'}"
+             loading="lazy"
+             width="200" height="300"
+             onerror="this.src='/img/404.png'">
+        </a>
+      </div>
+      <div class="p-3 flex flex-col justify-between flex-grow">
+        <div>
+            <div class="flex items-center justify-between mb-2 text-xs">
+                <span class="text-secondary-500">${stars}</span>
+                <span class="text-neutral-500 dark:text-neutral-400">${renderRatingText(rating)}</span>
+            </div>
+            <h3 class="text-sm font-medium text-neutral-900 dark:text-neutral-100 line-clamp-2 mb-1">
+                <a href="${item.url || '#'}" target="_blank" rel="noreferrer noopener" class="hover:text-primary-500 dark:hover:text-primary-400 transition-colors">
+                    ${item.display_title || '未知标题'}
+                </a>
+            </h3>
+        </div>
+      </div>
+    </div>
+  `;
+    }
+
+    // 渲染内容网格
+    function renderGrid(data, page = 1, append = false) {
+        const grid = document.getElementById('neodb-grid');
+        const itemsPerPage = 10;
+        const startIndex = (page - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const pageData = data.slice(startIndex, endIndex);
+
+        if (!append) {
+            // 如果不是追加，先清空网格
+            grid.innerHTML = '';
+            if (!data || data.length === 0) {
+                grid.innerHTML = '<div class="col-span-full text-center text-neutral-500 dark:text-neutral-400 py-8">好像没有数据呢...</div>';
+                return;
+            }
+        }
+
+        const itemsHtml = pageData.map(shelfItem => {
+            return renderItem(shelfItem);
+        }).join('');
+
+        // 追加或设置 HTML
+        if (append) {
+            grid.innerHTML += itemsHtml;
+        } else {
+            grid.innerHTML = itemsHtml;
+        }
+    }
+
+    // 更新类型按钮文本
+    function updateTypeTexts(category) {
+        // 查找当前分类对应的文本配置，如果找不到，回退到 'movie' 的配置
+        const texts = NEODB_CONFIG.typeTexts[category] || NEODB_CONFIG.typeTexts.movie;
+        const typeButtons = document.querySelectorAll('.neodb-type-item');
+
+        typeButtons.forEach(btn => {
+            const type = btn.dataset.type;
+            if (texts[type]) {
+                btn.textContent = texts[type];
+            }
+        });
+    }
+
+    // 加载数据
+    async function loadData(category, type, page = 1, append = false) {
+        if (isLoading) return; // 避免重复加载
+
+        isLoading = true;
+        const grid = document.getElementById('neodb-grid');
+        const loadMoreBtn = document.getElementById('load-more-btn');
+        const noMoreItems = document.getElementById('no-more-items');
+        const itemsPerPage = 10;
+
+        // 如果不是追加，显示加载动画
+        if (!append) {
+            grid.innerHTML = '<div class="col-span-full text-center py-8"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div></div>';
+            loadMoreBtn.style.display = 'none'; // 隐藏加载更多按钮
+            noMoreItems.style.display = 'none'; // 隐藏没有更多内容提示
+        }
+
+        // 检查是否已经加载过该分类的数据
+        const cacheKey = `${category}_${type}`;
+        if (!allData[cacheKey]) {
+            const fetchedData = await fetchNeoDBData(category, type);
+            allData[cacheKey] = fetchedData.data; // 缓存数据
+        }
+
+        const data = allData[cacheKey]; // 从缓存中获取数据
+
+        // 渲染数据
+        renderGrid(data, page, append);
+
+        // 更新加载更多按钮状态
+        const hasMore = data.length > page * itemsPerPage;
+
+        if (hasMore) {
+            loadMoreBtn.style.display = 'inline-block';
+            noMoreItems.style.display = 'none';
+        } else {
+            loadMoreBtn.style.display = 'none';
+            // 只有当总数据量大于0，但没有更多页时才显示“没有更多内容了”
+            if (data.length > 0) {
+                noMoreItems.style.display = 'block';
+            } else {
+                noMoreItems.style.display = 'none'; // 如果总数据量为0，前面已经有“没有数据呢”的提示
+            }
+        }
+
+        isLoading = false;
+    }
+
+    // 事件监听器
+    document.addEventListener('DOMContentLoaded', function () {
+        // 确保默认激活状态设置正确
+        currentCategory = NEODB_CONFIG.categories[0]?.key || 'book';
+        // 动态生成导航按钮 (在初始加载前)
+        generateNavButtons();
+        // 初始加载时更新类型按钮文本
+        updateTypeTexts(currentCategory);
+
+
+        // 分类切换事件
+        document.getElementById('neodb-nav')?.addEventListener('click', function (event) {
+            const target = event.target;
+            if (target.classList.contains('neodb-nav-item')) {
+                const category = target.dataset.category;
+
+                // 更新导航按钮激活状态
+                document.querySelectorAll('.neodb-nav-item').forEach(b => {
+                    b.classList.remove('active', 'text-primary-500', 'border-primary-500');
+                });
+                target.classList.add('active', 'text-primary-500', 'border-primary-500');
+
+                // 更新类型文本
+                updateTypeTexts(category);
+
+                // 重置状态并加载数据
+                currentCategory = category;
+                currentPage = 1;
+                loadData(category, currentType, 1, false);
+            }
+        });
+
+
+        // 类型切换事件
+        document.getElementById('neodb-type-nav')?.addEventListener('click', function (event) {
+            const target = event.target;
+            if (target.classList.contains('neodb-type-item')) {
+                const type = target.dataset.type;
+
+                // 更新类型按钮激活状态
+                document.querySelectorAll('.neodb-type-item').forEach(b => {
+                    b.classList.remove('active', 'bg-primary-500', 'text-white', 'border-primary-500');
+                    b.classList.add('bg-transparent', 'border-neutral-300', 'dark:border-neutral-600');
+                });
+                target.classList.add('active', 'bg-primary-500', 'text-white', 'border-primary-500');
+                target.classList.remove('bg-transparent', 'border-neutral-300', 'dark:border-neutral-600');
+
+                // 重置状态并加载数据
+                currentType = type;
+                currentPage = 1;
+                loadData(currentCategory, type, 1, false);
+            }
+        });
+
+
+        // 加载更多事件
+        document.getElementById('load-more-btn')?.addEventListener('click', function () {
+            currentPage++;
+            loadData(currentCategory, currentType, currentPage, true);
+        });
+
+        // 页面初始加载数据
+        loadData(currentCategory, currentType, 1, false);
+    });
+</script>
+
+{{- end -}}

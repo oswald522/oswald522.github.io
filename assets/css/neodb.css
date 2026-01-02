@@ -1,0 +1,332 @@
+/* NeoDB 书影音展示页面样式 */
+
+/* 文本截断 */
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* 项目卡片样式 */
+.neodb-item {
+    transition: all 0.3s ease-in-out;
+    overflow: visible;
+    position: relative;
+}
+
+/* 卡片图片容器 */
+.neodb-item .relative {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    margin: 8px;
+}
+
+/* 卡片图片样式 固定2:3比例 */
+.neodb-item img {
+    width: 100%;
+    object-fit: cover;
+    transition: all 0.3s ease-in-out;
+    background-color: #f8fafc;
+    border-radius: 12px;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+.dark .neodb-item img {
+    background-color: #374151;
+}
+
+.neodb-item:hover img {
+    filter: brightness(1.2) contrast(0.9);
+    opacity: 0.9;
+}
+
+/* Recent 标签样式 */
+.neodb-item .absolute {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    /* 绝对定位，可改为right */
+    background-color: rgba(var(--color-primary-500), 0.9);
+    color: white;
+    font-size: 10px;
+    padding: 3px 6px;
+    border-radius: 4px;
+    z-index: 10;
+    font-weight: 600;
+    text-transform: uppercase;
+    /* 大写 */
+    letter-spacing: 0.5px;
+}
+
+/* 卡片内容区域 */
+.neodb-item .p-3 {
+    padding: 0 12px 8px 12px;
+}
+
+/* 评分区域样式 */
+.neodb-item .flex.items-center.justify-between {
+    margin-bottom: 2px;
+    margin-top: 2px;
+}
+
+/* 评分星星样式 */
+.neodb-item .text-xs.text-secondary-500 {
+    color: #fbbf24;
+    font-size: 12px;
+}
+
+/* 评分数字样式 */
+.neodb-item .text-xs.text-neutral-500 {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* 标题样式 */
+.neodb-item h3 {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: #1f2937;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.dark .neodb-item h3 {
+    color: #f9fafb;
+}
+
+.neodb-item h3 a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+    font-size: 14px;
+}
+
+.neodb-item h3 a:hover {
+    color: rgb(var(--color-primary-500));
+}
+
+/* 评论文本样式 */
+/* .neodb-item p.text-xs.text-neutral-600 {
+  font-size: 12px;
+  line-height: 1.4;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.dark .neodb-item p.text-xs.text-neutral-600 {
+  color: #9ca3af;
+} */
+
+/* 链接样式 */
+.neodb-item a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.neodb-item a:hover {
+    text-decoration: none;
+}
+
+/* 响应式调整 - 只针对 neodb-item */
+@media (min-width: 1024px) {
+    .neodb-item img {
+        aspect-ratio: 2/3;
+    }
+}
+
+@media (max-width: 1023px) and (min-width: 768px) {
+    .neodb-item img {
+        aspect-ratio: 2/3;
+    }
+}
+
+@media (max-width: 767px) and (min-width: 640px) {
+    .neodb-item img {
+        aspect-ratio: 2/3;
+    }
+}
+
+@media (max-width: 639px) and (min-width: 480px) {
+    .neodb-item img {
+        aspect-ratio: 2/3;
+    }
+
+    .neodb-item .p-3 {
+        padding: 4px;
+    }
+
+    .neodb-item h3 {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 479px) {
+    .neodb-item img {
+        aspect-ratio: 2/3;
+    }
+
+    .neodb-item .p-3 {
+        padding: 0 4px;
+    }
+
+    .neodb-item h3 {
+        font-size: 14px;
+    }
+}
+
+/* 导航按钮样式 */
+.neodb-nav-item {
+    position: relative;
+    transition: all 0.2s ease-in-out;
+    text-decoration: none !important;
+    text-decoration-line: none !important;
+    font-size: 16px;
+}
+
+.neodb-nav-item.active {
+    color: rgb(var(--color-primary-500)) !important;
+    border-bottom-color: rgb(var(--color-primary-500)) !important;
+    text-decoration: none !important;
+    text-decoration-line: none !important;
+}
+
+.dark .neodb-nav-item:hover {
+    color: rgb(var(--color-primary-400)) !important;
+    text-decoration: none !important;
+}
+
+/* 类型按钮样式 */
+.neodb-type-item {
+    transition: all 0.2s ease-in-out;
+    border-radius: 0.25rem;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 0.25rem 0.75rem;
+}
+
+.neodb-type-item.active {
+    background-color: rgb(var(--color-primary-500)) !important;
+    color: white !important;
+    border-color: rgb(var(--color-primary-500)) !important;
+    text-decoration: none !important;
+    text-decoration-line: none !important;
+}
+
+.neodb-type-item:hover:not(.active) {
+    background-color: #f3f4f6;
+}
+
+.dark .neodb-type-item:hover:not(.active) {
+    background-color: #374151;
+}
+
+/* 类型按钮样式 */
+.neodb-type-item {
+    border-radius: 20px !important;
+    transition: all 0.3s ease-in-out;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.neodb-type-item.active {
+    background-color: rgb(var(--color-primary-500)) !important;
+    color: white !important;
+    border-color: rgb(var(--color-primary-500)) !important;
+    box-shadow: 0 4px 12px rgba(var(--color-primary-500), 0.3);
+}
+
+/* 加载更多按钮样式 */
+#load-more-btn {
+    border-radius: 20px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(var(--color-primary-500), 0.3);
+    background-color: rgb(var(--color-primary-500)) !important;
+    color: white !important;
+    border: 1px solid rgb(var(--color-primary-500)) !important;
+    transition: all 0.3s ease-in-out;
+    padding: 8px 16px;
+    font-size: 14px;
+}
+
+#load-more-btn:hover {
+    background-color: rgb(var(--color-primary-600)) !important;
+}
+
+/* 无数据状态样式 */
+.no-data {
+    text-align: center;
+    padding: 2rem;
+    color: #6b7280;
+}
+
+.dark .no-data {
+    color: #9ca3af;
+}
+
+/* 加载状态样式 */
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.loading-spinner {
+    width: 2rem;
+    height: 2rem;
+    border: 2px solid #e5e7eb;
+    border-top: 2px solid rgb(var(--color-primary-500));
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* 加载动画 */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* 响应式调整 */
+/* 默认：2列 */
+#neodb-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+/* ≥ 480px：2列 */
+@media (min-width: 480px) {
+    #neodb-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ≥ 640px：4列 */
+@media (min-width: 640px) {
+    #neodb-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* ≥ 1024px：5列 */
+@media (min-width: 1024px) {
+    #neodb-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+/* ≥ 1280px：6列 */
+@media (min-width: 1280px) {
+    #neodb-grid {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}

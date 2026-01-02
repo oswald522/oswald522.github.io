@@ -1,0 +1,105 @@
+name: Sync NeoDB Data
+
+permissions:
+  contents: write
+
+on:
+  schedule:
+    - cron: "0 17 * * *" # 每天 UTC+0 17点运行
+  workflow_dispatch:
+  push:
+
+jobs:
+  neodb_sync:
+    name: Sync NeoDB Data for All Types
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install jq if missing
+        run: |
+          if ! command -v jq &> /dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y jq
+          fi
+
+      - name: Ensure local files exist
+        run: |
+          categories=("book" "movie" "tv" "game")
+          types=("complete" "progress" "wishlist")
+          mkdir -p neodb
+          for category in "${categories[@]}"; do
+            for type in "${types[@]}"; do
+              local_file="neodb/${category}_${type}.json"
+              if [ ! -f "$local_file" ]; then
+                echo "Creating default JSON: $local_file"
+                echo '{"data": [], "pages": 0, "count": 0}' > "$local_file"
+              fi
+            done
+          done
+
+      - name: Sync all category/type combinations
+        run: |
+          categories=("book" "movie" "tv" "game")
+          types=("complete" "progress" "wishlist")
+          UPDATED=0
+
+          for category in "${categories[@]}"; do
+            for type in "${types[@]}"; do
+              echo "Syncing ${category}_${type}..."
+
+              # 下载第一页数据
+              curl -s -X GET "https://neodb.social/api/me/shelf/${type}?category=${category}&page=1" \
+                -H "accept: application/json" \
+                -H "Authorization: Bearer ${{ secrets.NEODB_ACCESS_TOKEN }}" \
+                -o "${category}_${type}1.json"
+
+              # 提取远程数据的 count 和 pages
+              remote_count=$(jq '.count // 0' "${category}_${type}1.json")
+              pages=$(jq '.pages // 0' "${category}_${type}1.json")
+
+              local_file="neodb/${category}_${type}.json"
+              local_count=$(jq '.count // 0' "$local_file" 2>/dev/null || echo 0)
+
+              if [ "$remote_count" -eq "$local_count" ]; then
+                echo "No update for ${category}_${type}"
+                continue
+              fi
+
+              UPDATED=1
+              mkdir -p "tmp/neodb/${category}_${type}"
+
+              # 批量下载所有分页数据
+              for ((i=1; i<=pages; i++)); do
+                echo "Downloading page $i of ${category}_${type}"
+                curl -s -X GET "https://neodb.social/api/me/shelf/${type}?category=${category}&page=$i" \
+                  -H "accept: application/json" \
+                  -H "Authorization: Bearer ${{ secrets.NEODB_ACCESS_TOKEN }}" \
+                  -o "tmp/neodb/${category}_${type}/${category}_${type}${i}.json"
+              done
+
+              # 合并分页数据
+              jq -c -s '{
+                data: map(.data[]) | unique | sort_by(.created_time) | reverse,
+                pages: (map(.pages)[0]),
+                count: (map(.count)[0])
+              }' tmp/neodb/${category}_${type}/*.json > "${category}_${type}.json"
+
+              # 保存到 neodb 目录
+              cp -f "${category}_${type}.json" "content/neodb/${category}_${type}.json"
+            done
+          done
+
+          # 如果无更新则跳过提交
+          if [ "$UPDATED" -eq 0 ]; then
+            echo "No updates. Exiting."
+            exit 0
+          fi
+
+      - name: Commit and Push
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: "chore: update NeoDB shelf data (all types)"
+          add: "./content/neodb"

@@ -43,8 +43,8 @@ weight = 20
 
 
 [[main]]
-name = "标签系列"
-pageRef = "tags"
+name = "书影音"
+pageRef = "neodb"
 weight = 30
 
 [[main]]
