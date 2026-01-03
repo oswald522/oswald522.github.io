@@ -28,4 +28,6 @@ links = [
   { github = "https://github.com/oswald522" },
   { orcid = "https://orcid.org/0009-0008-5461-7440" },
   { rss = "https://blog.baos.eu.org/index.xml" },
+  # { linuxdo = "https://linux.do/u/oswald522" },
+  { mastodon = "https://mastodon.social/@oswald522" },
 ]

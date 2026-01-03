@@ -8,7 +8,7 @@
 colorScheme          = "blowfish"
 defaultAppearance    = "light"    # valid options: light or dark
 autoSwitchAppearance = true
-
+enableA11y = false
 enableSearch   = true
 enableCodeCopy = true
 enableStructuredBreadcrumbs = false
@@ -34,7 +34,7 @@ smartTOC                      = true
 smartTOCHideUnfocusedChildren = false
 
 giteaDefaultServer   = "https://git.fsfe.org"
-forgejoDefaultServer = "https://v8.next.forgejo.org"
+forgejoDefaultServer = "https://v11.next.forgejo.org"
 
 [header]
   layout = "basic" # valid options: basic, fixed, fixed-fill, fixed-gradient, fixed-fill-blur
@@ -175,6 +175,8 @@ forgejoDefaultServer = "https://v8.next.forgejo.org"
   feedId = "187321030220335104"
   userId = "187298906722317312"
 
-
+[advertisement]
+  # adsense = ""
+  
 [params]
   custom_css = [ "css/custom.css","css/movie.css" ]
