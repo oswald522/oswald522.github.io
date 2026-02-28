@@ -8,6 +8,5 @@ featureimage: "https://picsum.photos/seed/e53f5a/1600/900.webp"
 tags: ["资源分享",""]
 # series: "读书笔记"
 ---
-政治体制和政治技术
 
 如果有任何疑问，请直接联系

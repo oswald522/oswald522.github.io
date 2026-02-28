@@ -322,3 +322,755 @@ sudo rm -rf /var/lib/containerd
 
 * [Linux 部署及安全实践指南](https://linux.do/t/topic/468841)
 * [【配置优化】我拿到VPS服务器必做的那些事](https://linux.do/t/topic/160305)
+
+    原文链接：新到手的 Linux 服务器，我这样设置 | Dejavu's Blog
+    昨天下午把几台服务器的自托管服务都迁移了一遍，花了几个小时，顺便把 Linux 服务器开荒教程也更新了一下。
+
+概要
+
+本文记录我初始化 Linux 服务器的 标准作业程序（SOP），这并非通用指南，仅作为个人快速部署环境的速查手册。
+重装操作系统
+
+重装有风险，本文不为任何脚本的安全性背书，请自行衡量并承担后果。如果条件允许，请尽可能使用自定义 ISO 镜像手动安装。
+使用一键 DD 脚本
+
+对于不支持自定义 ISO 镜像的服务商，使用一键 DD 脚本比较方便。开始前，务必花费几分钟读下作者的说明文档，这远比盲目粘贴命令重要。
+
+    bin456789/reinstall 支持重装的系统类型更多
+    bohanwood/debi 专注于纯净、精简的 Debian 系统环境
+
+以 Oracle ARM 机器安装 Debian 为例，使用 debi 脚本的操作流程如下：
+
+下载脚本
+
+curl -fLO <https://raw.githubusercontent.com/bohanyang/debi/master/debi.sh> && chmod +x debi.sh
+
+重装配置
+
+sudo ./debi.sh \
+  --version 13 \
+  --architecture arm64 \
+  --cloudflare \
+  --user viamoe \
+  --authorized-keys-url <https://github.com/githubUserName.keys> \
+  --ssh-port 22122
+
+参数说明：
+
+    --version 13 指定 Debian 13（代号 Trixie）
+    --architecture arm64 指定系统架构，这里的 arm64 匹配 ARM 架构机器
+    --cloudflare 预设 Cloudflare 作为默认 DNS
+    --user viamoe 创建具有 sudo 权限的普通用户 viamoe
+    --authorized-keys-url https://github.com/githubUserName.keys 导入 SSH 公钥，实现无密码登录
+    --ssh-port 22122 更改默认 SSH 端口，规避低级暴力扫描
+
+开始重装
+
+重启后，机器将自动联网重装系统
+
+sudo reboot
+
+期间可通过 VNC 观察安装进度，一般几分钟后新系统即可就绪。
+使用自定义 ISO 镜像
+
+若服务商支持上传自定义 ISO 镜像手动安装，这是最为推荐的方式，能让我们从源头掌控系统环境的纯净度。针对 Netcup 服务器的具体操作可参考：Netcup 服务器安装自定义 ISO 镜像。
+
+完成重装后，使用预设的用户凭据登录，开始后续配置。
+配置用户
+
+赋予普通用户 sudo 权限，方便后续使用和管理。
+
+# 切换到 root 用户
+
+su
+
+# sudo 免密码
+
+# 替换 dejavu 为实际用户名
+
+echo "dejavu ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/dejavu
+
+# 设置权限
+
+chmod 440 /etc/sudoers.d/dejavu
+
+SSH 安全加固
+配置公钥登录
+
+# 退出 root 用户
+
+exit
+
+# 创建公钥目录
+
+mkdir -p ~/.ssh
+
+# 粘贴 SSH 公钥
+
+vim ~/.ssh/authorized_keys
+
+# 或者上传 SSH 公钥
+
+# ssh -i /path/to/your/ed25519_key username@<IP> -p <port>
+
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+
+优化 SSH 配置
+
+sudo vim /etc/ssh/sshd_config
+
+重点修改以下配置：
+
+# 修改默认 SSH 端口
+
+Port 22122
+
+# 登录宽限时间
+
+# 超过 1 分钟不输入密码/密钥自动断开
+
+LoginGraceTime 1m
+
+# 禁止 root 用户直接登录
+
+PermitRootLogin no
+
+# 严格模式，检查主目录权限
+
+StrictModes yes
+
+# 开启 SSH 公钥登录方式
+
+PubkeyAuthentication yes
+
+# 禁止传统密码登录方式
+
+PasswordAuthentication no
+
+# 禁止空密码登录
+
+PermitEmptyPasswords no
+
+# 禁用键盘交互式认证（防止通过 PAM 绕过密码限制）
+
+KbdInteractiveAuthentication no
+
+# Debian 默认需要 yes，否则可能会影响部分会话功能
+
+UsePAM yes
+
+# 关闭 X11 转发
+
+X11Forwarding no
+
+# 保持 SSH 会话连接
+
+# 服务器每 60 秒发一次心跳包
+
+ClientAliveInterval 60
+
+# 如果客户端 5 次没回应才断开
+
+ClientAliveCountMax 5
+
+# 禁止 DNS 反向解析
+
+UseDNS no
+
+保持当前终端会话，新开一个 SSH 连接，确认正常，否则回到保持的 SSH 会话中检查配置。
+
+# 检查 SSH 配置
+
+sudo sshd -t
+
+# 使新的 SSH 配置生效
+
+sudo systemctl restart sshd
+
+IPv6 静态路由
+
+Netcup 服务器提供 /64 的 IPv6，建议设置静态路由
+
+sudo vim /etc/network/interfaces
+
+添加
+
+iface ens3 inet6 static
+    address <静态 IPv6 地址>
+    netmask 64
+    # Netcup network gateway
+    gateway fe80::1
+    # 接受路由公告
+    accept_ra 2
+
+然后执行
+
+sudo ip addr flush dev ens3
+
+更换 Linux 内核
+
+推荐使用针对虚拟化优化、更加轻量和高效的 Cloud 内核。
+
+sudo apt install -y linux-image-cloud-amd64
+
+重启加载新内核
+
+sudo reboot
+uname -r
+
+# 输出
+
+6.12.63+deb13-cloud-amd64
+
+清理旧内核
+
+# 列出已安装的内核包
+
+sudo dpkg --list | grep linux-image
+
+# 输出示例
+
+ii  linux-image-6.12.63+deb13-amd64       6.12.63-1                            amd64        Linux 6.12 for 64-bit PCs (signed)
+ii  linux-image-6.12.63+deb13-cloud-amd64 6.12.63-1                            amd64        Linux 6.12 for x86-64 cloud (signed)
+ii  linux-image-amd64                     6.12.63-1                            amd64        Linux for 64-bit PCs (meta-package)
+ii  linux-image-cloud-amd64               6.12.63-1                            amd64        Linux for x86-64 cloud (meta-package)
+
+# 移除常规内核元包及具体版本（请根据实际输出的版本号替换）
+
+sudo apt purge -y linux-image-amd64 linux-image-6.12.63+deb13-amd64
+
+# 更新引导
+
+sudo update-grub
+
+# 运行清理
+
+sudo apt autoremove --purge -y
+
+安装常用软件包
+
+按需安装基础软件包及常用应用程序。
+基本工具包
+
+sudo apt update && apt upgrade
+sudo apt install \
+    apt-transport-https \
+    build-essential \
+    git \
+    curl \
+    wget \
+    unzip \
+    tmux \
+    btop \
+    bind9-dnsutils \
+    tree \
+    vim
+
+安装 Docker
+
+参考 Docker 官方文档 说明的步骤，下列命令不保证时效性
+
+# 添加 Docker 官方的 GPG 密钥
+
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL <https://download.docker.com/linux/debian/gpg> -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# 添加软件源
+
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo systemctl status docker
+
+补充资料：给 Docker 启用 IPv6 支持
+安装 Nginx
+
+同样地，参考 Nginx 项目文档——在 Debian 上的 安装步骤
+
+sudo apt install curl gnupg2 ca-certificates lsb-release debian-archive-keyring
+
+# 导入 GPG 密钥
+
+curl <https://nginx.org/keys/nginx_signing.key> | gpg --dearmor \
+    | sudo tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
+
+# 验证 GPG 密钥
+
+mkdir -m 700 ~/.gnupg
+gpg --dry-run --quiet --no-keyring --import --import-options import-show /usr/share/keyrings/nginx-archive-keyring.gpg
+
+echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] \
+<http://nginx.org/packages/debian> `lsb_release -cs` nginx" \
+    | sudo tee /etc/apt/sources.list.d/nginx.list
+
+# 设置仓库锁定，优先使用 Nginx 官方提供的软件包
+
+echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" \
+    | sudo tee /etc/apt/preferences.d/99nginx
+
+# 安装 Nginx
+
+sudo apt update && sudo apt install nginx
+
+# 启动 Nginx
+
+sudo systemctl start nginx
+
+使用自签 SSL/TLS 证书，设置 Nginx 默认回退 (Fallback) 虚拟主机。
+
+# 准备目录
+
+sudo mkdir -p /etc/nginx/cert
+sudo chmod 700 /etc/nginx/cert
+
+# 生成证书
+
+sudo openssl req -x509 -new -nodes -newkey rsa:2048 \
+  -sha256 \
+  -days 3650 \
+  -keyout /etc/nginx/cert/deny.key \
+  -out /etc/nginx/cert/deny.pem \
+  -subj "/C=XX/ST=Denied/L=Denied/O=Denied/CN=invalid.local" \
+  -addext "subjectAltName=DNS:invalid.local"
+  
+# 设置权限
+
+sudo chmod 600 /etc/nginx/cert/deny.key
+sudo chmod 644 /etc/nginx/cert/deny.pem
+
+新建虚拟主机配置文件
+
+sudo vim /etc/nginx/conf.d/00-default.conf
+
+内容如下：
+
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name_;
+    return 444;
+}
+
+server {
+    listen 443 ssl default_server;
+    listen [::]:443 ssl default_server;
+    server_name_;
+
+    ssl_certificate /etc/nginx/cert/deny.pem; 
+    ssl_certificate_key /etc/nginx/cert/deny.key;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers off;
+
+    error_page 497 =444 /dev/null;
+
+    return 444;
+}
+
+重载 Nginx 配置
+
+sudo nginx -t
+sudo nginx -s reload
+
+设置 ZRAM 和 Swap
+
+合理配置 ZRAM 和 Swap，平衡硬盘 I/O 性能和 CPU 开销。
+配置 ZRAM
+
+ZRAM 通过在 RAM 中划分一块区域压缩，速度远快于硬盘上的 Swap 空间。
+
+# 安装 zram-tools 管理工具
+
+sudo apt update && sudo apt install -y zram-tools
+
+编辑 ZRAM 配置
+
+sudo vim /etc/default/zramswap
+
+参数说明：
+
+# 选择 zstd 算法，最佳平衡压缩比和速度
+
+ALGO=zstd
+
+# 分配 ZRAM 比例
+
+# 1GB RAM 建议 100%
+
+# 2~4GB RAM 建议 60%
+
+# 8GB RAM 以上建议 25%
+
+PERCENT=70
+
+# 优先级 100，确保系统优先使用 ZRAM
+
+PRIORITY=100
+
+配置 Swap
+
+Swapfile 比 Swap 分区更为灵活
+
+# 创建 2GB 的 Swapfile
+
+# 1024 * 2 = 2048
+
+sudo dd if=/dev/zero of=/swapfile bs=1M count=2048 status=progress
+
+# 设置权限
+
+sudo chmod 600 /swapfile
+
+# 格式化
+
+sudo mkswap /swapfile
+
+# Swap 启用优先级低于 ZRAM
+
+sudo swapon --priority -2 /swapfile
+
+# 启动时自动挂载
+
+echo '/swapfile none swap sw,pri=-2 0 0' | sudo tee -a /etc/fstab
+
+# 检查挂载
+
+sudo mount -a
+
+系统内核调整
+
+根据物理 RAM 大小，调整设置系统使用 Swap 的「积极性」。
+
+# 1GB RAM（激进）
+
+echo "vm.swappiness=100" | sudo tee -a /etc/sysctl.conf
+
+# 2GB/4GB RAM（积极）
+
+echo "vm.swappiness=60" | sudo tee -a /etc/sysctl.conf
+
+# 8GB RAM 以上（保守）
+
+echo "vm.swappiness=10" | sudo tee -a /etc/sysctl.conf
+
+对于 2GB RAM 以下的机器，应当更倾向于释放文件缓存：
+
+echo "vm.vfs_cache_pressure=50" | sudo tee -a /etc/sysctl.conf
+
+应用配置
+
+sudo sysctl -p
+
+验证状态
+
+sudo swapon --show
+sudo zramctl
+
+SSD Trim 优化
+
+如果 VPS/VDS 使用的是 NVMe SSD，建议启用 Trim 自动优化。
+
+# 定时任务
+
+sudo systemctl enable --now fstrim.timer
+
+并非所有服务商提供的 VPS/VDS 都支持 Trim，可以验证下：
+
+# DISC-MAX 列不为 0
+
+lsblk -D
+NAME   DISC-ALN DISC-GRAN DISC-MAX DISC-ZERO
+sr0           0        0B       0B         0
+zram0         0        4K       2T         0
+vda           0      512B       2G         0
+├─vda1        0      512B       2G         0
+└─vda2        0      512B       2G         0
+
+# 尝试手动触发
+
+sudo fstrim -v /
+/: 434.4 GiB (466435428352 bytes) trimmed
+
+NTP 时区同步
+设置 UTC 时区
+
+无论服务器位于何处，我都习惯将时区统一设置为 UTC（世界协调时），避免跨时区运维时产生的日志混乱和时间差纠纷，是一个非常省心的「隐性福利」。
+
+sudo timedatectl set-timezone UTC
+
+使用 Chrony 同步时间
+
+与默认的 systemd-timesyncd 比，Chrony 的精度和性能更佳。
+
+# 安装 Chrony 客户端
+
+sudo apt update
+sudo apt install chrony
+
+添加 NTP 服务器
+
+sudo vim /etc/chrony/chrony.conf
+
+注释默认的 pool 及 server 行，添加 Cloudflare NTP 节点：
+
+server time.cloudflare.com iburst
+server time.cloudflare.com iburst
+server time.cloudflare.com iburst
+server time.cloudflare.com iburst
+
+启动 Chrony 服务
+
+sudo systemctl mask systemd-timesyncd.service
+sudo systemctl enable --now chrony
+
+验证同步状态
+
+chronyc sources -v
+
+配置 nftables 防火墙
+
+nftables 是 Linux 内核现代化的包过滤框架。在 Debian 13 中，我们应该摒弃过时的 iptables 和 UFW，直接拥抱原生且高效的 nftables。
+检查环境
+
+从 Debian 10 开始，nftables 是默认安装的，但通常处于未启用状态，检查：
+
+# 确保 nftables 已安装
+
+sudo apt update && sudo apt install nftables -y
+
+# 默认 inactive 状态是正常的
+
+sudo systemctl status nftables
+
+若此前安装过 UFW，建议卸载以免冲突
+
+sudo ufw disable && sudo apt purge ufw -y
+
+理解配置
+
+在编写规则前，只需掌握三个层级：
+
+    表（Table）：规则的顶级容器
+
+    链（Chain）：绑定在网络钩子（INPUT/FORWARD/OUTPUT）上的规则集，定义默认策略（Drop 或 Accept）
+
+    规则（Rule）：具体的匹配条件与行动
+
+开始使用
+
+以下配置是典型的「安全」服务器方案：仅允许 Cloudflare CDN 回源访问 80/443 端口，除 SSH 端口外全部切断。
+
+# 编辑配置文件
+
+sudo vim /etc/nftables.conf
+
+语法很简单，可以看注释
+
+# !/usr/sbin/nft -f
+
+# 刷新规则
+
+flush ruleset
+
+table inet filter {
+    # ============================================================
+    # IP 集合 (Sets)
+    # ============================================================
+    set cloudflare_v4 {
+        type ipv4_addr; flags interval;
+        elements = {
+            173.245.48.0/20,
+            103.21.244.0/22,
+            103.22.200.0/22,
+            103.31.4.0/22,
+            141.101.64.0/18,
+            108.162.192.0/18,
+            190.93.240.0/20,
+            188.114.96.0/20,
+            197.234.240.0/22,
+            198.41.128.0/17,
+            162.158.0.0/15,
+            104.16.0.0/13,
+            104.24.0.0/14,
+            172.64.0.0/13,
+            131.0.72.0/22
+        }
+    }
+
+    set cloudflare_v6 {
+        type ipv6_addr; flags interval;
+        elements = {
+            2400:cb00::/32,
+            2606:4700::/32,
+            2803:f800::/32,
+            2405:b500::/32,
+            2405:8100::/32,
+            2a06:98c0::/29,
+            2c0f:f248::/32
+        }
+    }
+
+    # ============================================================
+    # INPUT 链 (入站)
+    # ============================================================
+    chain input {
+       # 规则外流量拒绝
+        type filter hook input priority filter; policy drop;
+
+        # 放行已建立连接
+        ct state established, related accept
+        # 丢弃无效包
+        ct state invalid drop
+
+        # 允许回环接口
+        iif "lo" accept
+        # 允许 IPv6 NDP
+        ip6 nexthdr icmpv6 icmpv6 type { nd-neighbor-solicit, nd-neighbor-advert, nd-router-advert } accept
+
+        # 允许 ICMP (速率限速)
+        ip protocol icmp limit rate 4/second accept
+        ip6 nexthdr icmpv6 icmpv6 type echo-request limit rate 4/second accept
+
+        # 允许 SSH 端口
+        tcp dport 22122 accept
+
+        # 仅限 Cloudflare IP 段访问 80/443
+        ip saddr @cloudflare_v4 tcp dport { 80, 443 } accept
+        ip6 saddr @cloudflare_v6 tcp dport { 80, 443 } accept
+    }
+
+    # ============================================================
+    # FORWARD 链 (转发)
+    # ============================================================
+    chain forward {
+        # 规则外流量拒绝
+        type filter hook forward priority filter; policy drop;
+
+        # 放行已建立连接
+        ct state established, related accept
+        # 丢弃无效包
+        ct state invalid drop
+
+        # 允许 Docker 出站 (覆盖默认网桥和自定义网桥)
+        iifname "docker0" accept
+        iifname "br-*" accept
+
+        # 允许 Docker 容器间通信
+        iifname "docker0" oifname "docker0" accept
+        iifname "br-*" oifname "br-*" accept
+    }
+
+    # ============================================================
+    # OUTPUT 链 (出站)
+    # ============================================================
+    chain output {
+        # 默认允许所有出站
+        type filter hook output priority filter; policy accept;
+    }
+}
+
+应用规则
+
+# 检查语法
+
+sudo nft -c -f /etc/nftables.conf
+
+# 启动服务
+
+sudo systemctl enable --now nftables
+
+# Docker 重启后会自动注入规则
+
+sudo systemctl restart nftables && sudo systemctl restart docker
+
+# 测试 Docker 出站
+
+sudo docker run --rm busybox ping -c 4 dejavu.moe
+
+安装配置 Fail2ban
+
+# 安装 Fail2ban
+
+sudo apt update && sudo apt install fail2ban
+
+# 创建一个最小的 SSH 服务保护配置
+
+sudo vim /etc/fail2ban/jail.local
+
+配置内容如下：
+
+[DEFAULT]
+
+# 本机地址自动忽略，防止误封自己
+
+ignoreip = 127.0.0.1/8 ::1
+
+# 封禁 1 天
+
+bantime  = 1d
+
+# 在 10 分钟内累计失败即触发
+
+findtime = 10m
+
+# 触发封禁的失败次数阈值
+
+maxretry = 3
+
+# 自动 nftables 规则插入
+
+banaction = nftables-multiport
+banaction_allports = nftables-allports
+[sshd]
+
+# 启用 SSH 保护
+
+enabled = true
+
+# SSH 服务的监听端口（务必正确匹配）
+
+port    = 22122
+
+# 使用 systemd 日志后端
+
+backend = systemd
+
+# 严格地匹配失败日志
+
+mode    = aggressive
+
+启动 Fail2ban 服务
+
+sudo systemctl enable --now fail2ban
+sudo systemctl restart nftables && sudo systemctl restart fail2ban
+
+测试一下封禁
+
+# 封禁一个「黑户」
+
+sudo fail2ban-client set sshd banip 2400:6180:0:d2:0:2:9699:d000
+
+# 检查 nftables 规则中是否存在 f2b 动态表
+
+sudo nft list ruleset | grep f2b
+
+检查 Fail2ban 配置
+
+# 巡查「监狱」
+
+sudo fail2ban-client status
+
+# 查封禁 IP
+
+sudo fail2ban-client status sshd
+
+至此，一台纯净、安全的服务器已经准备就绪。Happy Hosting!
+
+另请参阅：
