@@ -107,14 +107,12 @@
           {{ $lang := print "."  .Lang  ".md" }}
           {{ $path = replace $path $lang ".md" }}
         {{ end }}
-        {{ $jsPage := resources.Get "js/page.js" }}
-        {{ $jsPage = $jsPage | resources.Minify | resources.Fingerprint (site.Params.fingerprintAlgorithm | default "sha512") }}
-        <script
-          type="text/javascript"
-          src="{{ $jsPage.RelPermalink }}"
-          integrity="{{ $jsPage.Data.Integrity }}"
-          data-oid="views_{{ $path }}"
-          data-oid-likes="likes_{{ $path }}"></script>
+        {{ $jsPageRaw := resources.Get "js/page.js" }} <!-- 获取原始资源，可能为nil -->
+        {{ with $jsPageRaw }} <!-- 检查 $jsPageRaw 是否存在 -->
+        {{ $jsPage := .Minify | fingerprint (site.Params.fingerprintAlgorithm | default "sha512") }} <!-- 如果存在，则处理它，并赋值给新的变量 -->
+        <script type="text/javascript" src="{{ $jsPage.RelPermalink }}" integrity="{{ $jsPage.Data.Integrity }}"
+          data-oid="views_{{ $path }}" data-oid-likes="likes_{{ $path }}"></script>
+        {{ end }} <!-- 结束 with 块 -->
       {{ end }}
     </section>
 

@@ -44,3 +44,84 @@ body {
         linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
     background-size: 8px 8px;
 }
+
+
+/* # 不同层级标题颜色 */
+/* 浅色模式下的彩虹色标题 */
+:where(h3):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    color: #ea580c !important;
+    /* 橙色 */
+}
+
+:where(h4):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    color: #16a34a !important;
+    /* 绿色 */
+}
+
+:where(h5):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    color: #2563eb !important;
+    /* 蓝色 */
+}
+
+:where(h6):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    color: #9333ea !important;
+    /* 紫色 */
+}
+
+/* 深色模式下的彩虹色标题 */
+.dark :where(h2):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    color: #f87171 !important;
+    /* 浅红色 */
+}
+
+.dark :where(h3):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    color: #fb923c !important;
+    /* 浅橙色 */
+}
+
+.dark :where(h4):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    color: #4ade80 !important;
+    /* 浅绿色 */
+}
+
+.dark :where(h5):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    color: #60a5fa !important;
+    /* 浅蓝色 */
+}
+
+.dark :where(h6):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    color: #a78bfa !important;
+    /* 浅紫色 */
+}
+
+
+
+/* 浅色模式下的TOC彩虹色 */
+.toc ul ul li a {
+    color: #dc2626 !important;
+}
+
+/* H4对应绿色 */
+.toc ul ul ul ul ul li a {
+    color: #2563eb !important;
+}
+
+/* H5对应蓝色 */
+.toc ul ul ul ul ul ul li a {
+    color: #9333ea !important;
+}
+
+/* H6对应紫色 */
+
+/* 深色模式下的TOC彩虹色 */
+/* H4对应浅绿色 */
+.dark .toc ul ul ul ul ul li a {
+    color: #60a5fa !important;
+}
+
+/* H5对应浅蓝色 */
+.dark .toc ul ul ul ul ul ul li a {
+    color: #a78bfa !important;
+}
+
+/* H6对应浅紫色 */
