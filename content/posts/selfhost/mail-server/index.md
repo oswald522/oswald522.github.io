@@ -140,7 +140,7 @@ docker run \
   cd /root/data/docker_data/posteio
   ```
 
-2. **创建 `docker-compose.yml` 配置文件**
+1. **创建 `docker-compose.yml` 配置文件**
 
     ```bash
     vim docker-compose.yml
@@ -180,7 +180,7 @@ docker run \
 
     > **💡 性能提示**：对于资源有限的服务器，可以通过取消注释 `DISABLE_CLAMAV` 和 `DISABLE_RSPAMD` 来禁用反病毒和反垃圾邮件功能，这将大幅降低内存和 CPU 的占用。
 
-3. **启动服务**
+2. **启动服务**
     编辑完成后，保存并退出文件 (`:wq`)，然后运行以下命令以后台模式启动容器：
 
     ```bash
@@ -191,37 +191,37 @@ docker run \
 
 ## ⚙️ **五、初始化与配置**
 
-部署成功后，通过浏览器访问 `https://mail.example.com` (请替换为您的主机名) 即可进入 Web 管理界面。![no_https](/img/no_https.png)
+部署成功后，通过浏览器访问 `https://mail.example.com` (请替换为您的主机名) 即可进入 Web 管理界面。![no_https](no_https.png)
 
 ### 5.1 注册管理员账户
 
-首次访问时，浏览器可能会提示“隐私错误”或“证书无效”，这是因为初始证书是自签名的，请选择“继续前往”即可。进入页面后，创建您的第一个管理员账户和密码。![注册管理用户](/img/reg_admin.png)。
+首次访问时，浏览器可能会提示“隐私错误”或“证书无效”，这是因为初始证书是自签名的，请选择“继续前往”即可。进入页面后，创建您的第一个管理员账户和密码。![注册管理用户](reg_admin.png)。
 
 > 需要注意的是**邮件管理员**的登录地址为`https://mail.example.com/admin/login`,普通用户登录地址<https://mail.example.com/webmail/>。 两者区别为管理员用户可添加普通用户、设置服务器、查看服务器状态等等高权限操作，普通用户不具有相应的权限。
 
 ### 5.2 配置 Let's Encrypt SSL 证书
 
 登录后，导航至 **System Settings -> TLS Certificate**。在 `Let's Encrypt domain` 字段中输入您的邮件服务器主机名（例如 `mail.example.com`），然后点击 **Save Changes**。系统将自动申请并配置免费的 SSL 证书。
-![配置证书](/img/lets-cert.png)
-![设置证书域名](/img/lets-domain.png)
+![配置证书](lets-cert.png)
+![设置证书域名](lets-domain.png)
 
 ### 5.3 生成并配置 DKIM 密钥
 
 这是提升邮件信誉度的关键一步。
 
 1. 导航至 **Virtual domains**，点击您的域名（例如 `example.com`）。
-   ![设置域名](/img/set_domain.png)
+   ![设置域名](set_domain.png)
 2. 在域名配置页面中，找到 **DKIM** 部分，点击 **Create DKIM key**。
-   ![alt text](/img/create-key.png)
+   ![alt text](create-key.png)
 3. 系统会生成一段 TXT 记录。**请将这段记录完整地添加到您域名的 DNS 解析中**。这就是我们在 `3.1` 节中预留的 DKIM 记录。解析生效通常需要几分钟到几小时不等。
-  ![alt text](/img/get-key.png)
+  ![alt text](get-key.png)
 
 ### 5.4 Webmail 日常使用
 
 在管理界面的右上角，点击 **Webmail** 按钮，即可跳转到邮件收发界面。使用您刚才创建的账户登录，即可开始体验一个功能齐全、界面简洁的 Web 邮箱。
 
-![alt text](/img/admin-webmail.png)
-![alt text](/img/email.png)
+![alt text](admin-webmail.png)
+![alt text](email.png)
 
 ---
 
@@ -234,11 +234,11 @@ docker run \
   > **1. 向测试邮箱发信**：打开网站后会给你一个测试邮箱，点击复制后，在你的邮箱里发一份邮件，建议内容随便复制一段话(20个字左右即可) ❗不要留空,会减低评分
   >
   > **2.点击查看你的邮件得分**。
-  ![alt text](/img/email-grade.png)
+  ![alt text](email-grade.png)
   >
   > **3.等待结果**。如果是10分，恭喜你不用再折腾，如果不是，去下面没打勾的测试点击下拉查看详情并修改你的自建邮箱配置。一般来说自建邮箱开启DKIM认证非常重要，它使邮件可信且识别为重要。
 
-2. WebEmail故障排除
+1. WebEmail故障排除
 
   登录管理员用户，选择左侧用户栏`Server status`可以查看占用登录情况，`Connection diagnostics`可以查看端口开放情况。大多数情况下：如果发现25端口显示为红色，则说明25端口被服务商禁用，当前邮局可接收邮件但无法发送。解决方法有：使用中继服务（resend等）、向服务商申请等。
-  ![查看端口情况](/img/check-port.png)
+  ![查看端口情况](check-port.png)

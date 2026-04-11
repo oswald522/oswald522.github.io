@@ -2,7 +2,7 @@
 title: "价格行为系列教程（00入门篇）"
 description: "记录自己学习价格行为的笔记，仅供参考使用。"
 date: 2026-02-25T12:07:43+08:00
-draft: true
+draft: false
 showComments: true
 featureimage: "https://picsum.photos/seed/e53f5a/1600/900.webp"
 tags: ["价格行为","投资理财","交易生涯"]
@@ -69,6 +69,6 @@ graph LR
     - 规则 2——对结构性框架支撑或阻力的突破将引出价格在下一框架区域
 内的运动。
 
-{{< carousel images="{/img/pa/rule01.png, /img/pa/rule02.png}" >}}
+{{< carousel images="*.png" aspectRatio="177-100" >}}
 
 1. 初始分析过程
