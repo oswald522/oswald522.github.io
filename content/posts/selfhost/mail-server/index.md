@@ -1,7 +1,7 @@
 ---
 title: "最简邮局搭建教程|使用poste.io部署自己的邮局"
 date: 2025-09-15T17:41:40+08:00
-draft: true
+draft: false 
 description: ""
 showComments: true
 featureimage: "https://picsum.photos/seed/907fd2/1600/900.webp"

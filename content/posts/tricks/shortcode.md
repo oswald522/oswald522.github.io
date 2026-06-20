@@ -1,6 +1,5 @@
 ---
 title: "简码"
-weight: 6
 date: '2025-03-09T12:19:00+08:00'
 draft: false
 description: "所有 Blowfish 中可用的简码"

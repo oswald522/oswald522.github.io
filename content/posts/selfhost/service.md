@@ -1,7 +1,7 @@
 ---
 title: "自建服务一览及搭建配置文件"
 date: 2025-03-15T17:41:40+08:00
-draft: true
+draft: false
 description: ""
 showComments: true
 featureimage: "https://picsum.photos/seed/907fd2/1600/900.webp"

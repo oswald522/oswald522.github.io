@@ -6,7 +6,8 @@ draft: false
 showComments: true
 featureimage: "https://picsum.photos/seed/83e83b/1600/900.webp"
 tags: ["经验记录","技术分享"]
-series: "建站技术"
+series: ["建站技术"]
+series_order: 2
 ---
 
 ## 前言
